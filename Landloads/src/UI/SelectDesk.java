@@ -1,5 +1,6 @@
 package UI;
 
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.MediaTracker;
 
@@ -24,13 +25,66 @@ public class SelectDesk extends JPanel{
 	
 	MediaTracker mt;
 	
+	MyJpanel topBar;
+	JPanel bottomBar;
+	MyJpanel classicJpanel;
+	MyJpanel returnJpanel;
+	
+	MyJpanel firstTen;
+	MyJpanel secondTen;
+	MyJpanel[] firstTenDesk;
+	MyJpanel[] secondTenDesk;
+	MyJpanel start;
 	public SelectDesk(client p){
 		this.p = p;
+		//setOpaque(false);
 		loadMedia();
 		init();
 	}
 	public void init() {
+		topBar = new MyJpanel(image_topbar);
+		returnJpanel = new MyJpanel(image_return);
+		classicJpanel = new MyJpanel(image_classic);
+		topBar.add(returnJpanel);
+		topBar.add(classicJpanel);
+		topBar.setOpaque(false);
+		add(topBar);
 		
+		bottomBar = new JPanel();
+		bottomBar.setOpaque(false);
+		
+		firstTen = new MyJpanel(image_back);
+		firstTen.setOpaque(false);
+		firstTenDesk = new MyJpanel[10];
+		for(int i = 0; i < 10; i++){
+			firstTenDesk[i] = new MyJpanel(image_desk);
+			firstTen.add(firstTenDesk[i]);
+		}
+		bottomBar.add(firstTen);
+		
+		secondTen = new MyJpanel(image_back);
+		secondTen.setOpaque(false);
+		secondTenDesk = new MyJpanel[10];
+		for(int i = 0; i < 10; i++){
+			secondTenDesk[i] = new MyJpanel(image_desk);
+			secondTen.add(firstTenDesk[i]);
+		}
+		bottomBar.add(secondTen);
+		
+		start = new MyJpanel(image_start);
+		
+		bottomBar.add(start);
+	}
+	
+	public void paintComponent(Graphics g) {
+		returnJpanel.setLocation(20, 10);
+		returnJpanel.setSize(106, 82);
+		
+		classicJpanel.setSize(237, 57);
+		classicJpanel.setLocation(361, 22);
+		
+		topBar.setLocation(0, 0);
+		topBar.setSize(960,102);
 	}
 	private void loadMedia() {
 		// TODO Auto-generated method stub

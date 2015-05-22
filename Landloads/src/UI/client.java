@@ -38,6 +38,7 @@ public class client extends JApplet{
 	SelectPlay selectPlay;
 	MyData myData;
 	Help help;
+	SelectDesk selectDesk;
 	//SelectLevel selectLevel;
 	
 	int width = 960;
@@ -80,15 +81,22 @@ public class client extends JApplet{
 		help.setLocation(0, 0);
 		help.setSize(960, 640);
 		
+		selectDesk = new SelectDesk(this);
+		selectDesk.setLocation(0, 0);
+		selectDesk.setSize(960, 640);
+		
 		Container p = getContentPane();
 		p.add(log);
 		p.add(selectPlay);
 		p.add(bgp);
 		p.add(myData);
 		p.add(help);
+		p.add(selectDesk);
+		
 		selectPlay.setVisible(false);
 		myData.setVisible(false);
 		help.setVisible(false);
+		selectDesk.setVisible(false);
 	}
 	
 	private void loadMedia() {
@@ -144,6 +152,12 @@ public class client extends JApplet{
 		selectPlay.setVisible(false);
 		help.setVisible(true);
 		bgp.setVisible(false);
+	}
+	
+	public void showSelectDesk(){
+		selectPlay.setVisible(false);
+		selectDesk.setVisible(true);
+		bgp.setVisible(true);
 	}
 	public static void main(String[] args) {
 		int width = 960;
