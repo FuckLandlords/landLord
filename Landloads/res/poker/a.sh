@@ -1,0 +1,1 @@
+for files in `ls 扑克*`;do mv $files 扑克${$files#poker}; done
