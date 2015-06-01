@@ -308,7 +308,7 @@ class Game{
     public void cardOutReply(String cardList)
     {
         String cardOutString = "cardOut ";
-        cardOutString += whosTurn + ' ';
+        cardOutString += whosTurn + " ";
         cardOutString += cardList;
         for(int i=0;i<3;i++){
             players.get(i).cardOutReply(cardOutString);
@@ -319,11 +319,11 @@ class Game{
     {
         String cardInfoString = "cardInfo";
         for( int i = biggestCards.size()-1;i>=0;i--){
-            cardInfoString += ' ' + biggestCards.get(i).value;
+            cardInfoString += " " + biggestCards.get(i).value;
         }
-        cardInfoString += ' ' + bigIndex;
+        cardInfoString += " " + bigIndex;
         for(int i=0;i<3;i++){
-            cardInfoString += ' ' + cardDecks.get(i).cards.size();
+            cardInfoString += " " + cardDecks.get(i).cards.size();
         }
         cardInfoString += "\r\n";
         for(int i = 0; i<3;i++){
@@ -335,11 +335,11 @@ class Game{
     {
         String cardInfoString = "cardInfo";
         for( int i = biggestCards.size()-1;i>=0;i--){
-            cardInfoString += ' ' + biggestCards.get(i).value;
+            cardInfoString += " " + biggestCards.get(i).value;
         }
-        cardInfoString += ' ' + bigIndex;
+        cardInfoString += " " + bigIndex;
         for(int i=0;i<3;i++){
-            cardInfoString += ' ' + cardDecks.get(i).cards.size();
+            cardInfoString += " " + cardDecks.get(i).cards.size();
         }
         cardInfoString += "\r\n";
         return cardInfoString;
@@ -460,12 +460,12 @@ class clientThread extends Thread{
                 joinRoom(clientCommand);
             } else if(clientCommand.startsWith("quitRoom")){
                 quitRoom();
+            } else if(clientCommand.startsWith("readyStatus")){
+                readyStatus();
             } else if(clientCommand.startsWith("ready")){
                 ready();
             } else if(clientCommand.startsWith("notReady")){
                 notReady();
-            } else if(clientCommand.startsWith("readyStatus")){
-                readyStatus();
             } else if(clientCommand.startsWith("thatJer")){
                 thatJerk(clientCommand);
             } else if(clientCommand.startsWith("gameInfo")){
@@ -501,12 +501,14 @@ class clientThread extends Thread{
                 me = new User();
                 me.userName = userName;
                 me.theRoom = null;
+                User anotherMe = me;
                 me = userList.put(userName, me);
                 if(me!=null) {
                     me = userList.put(me.userName, me);
                     dout.write(("login fail\r\n").getBytes("UTF-8"));
                     continue;
                 }
+                me = anotherMe;
                 dout.write(("login success\r\n").getBytes("UTF-8"));
                 break;
             } catch (Exception ex) {
@@ -538,26 +540,31 @@ class clientThread extends Thread{
     {
         try{
             Random random = new Random();
-            int partition = random.nextInt(roomArray.size());
-            int searchIndex;
-            for(searchIndex = partition+1;searchIndex!=partition;searchIndex=(searchIndex+1)%roomArray.size())
+            int originalSize = roomArray.size();
+            if(originalSize == 0)
+                openNewRoomNoDout();
+            else
             {
-                if(roomArray.get(searchIndex).users.size()<3){
-                    me.theRoom = roomArray.get(searchIndex);
-                    me.theRoom.users.add(this);
-                    break;
+                int partition = random.nextInt(originalSize);
+                int searchIndex;
+                for(searchIndex = (partition+1)%originalSize;searchIndex!=partition;searchIndex=(searchIndex+1)%roomArray.size())
+                {
+                    if(roomArray.get(searchIndex).users.size()<3){
+                        me.theRoom = roomArray.get(searchIndex);
+                        me.theRoom.users.add(this);
+                        break;
+                    }
+                }
+                if(searchIndex == partition){
+                    if(roomArray.get(searchIndex).users.size()<3){
+                        roomArray.get(searchIndex).users.add(this);
+                        me.theRoom = roomArray.get(searchIndex);
+                    }
+                    else{
+                        openNewRoomNoDout();
+                    }
                 }
             }
-            if(searchIndex == partition){
-                if(roomArray.get(searchIndex).users.size()<3){
-                    roomArray.get(searchIndex).users.add(this);
-                    me.theRoom = roomArray.get(searchIndex);
-                }
-                else{
-                    openNewRoomNoDout();
-                }
-            }
-
             String tableStatusString = "startMatching " + generateTableStatusString(me.theRoom) + "\r\n";
             dout.write(tableStatusString.getBytes("UTF-8"));
             me.theRoom.notifyTableStatus();
@@ -572,11 +579,11 @@ class clientThread extends Thread{
 
     public String generateTableStatusString(Room targetRoom)
     {
-        String tableStatus = "";
-        tableStatus += targetRoom.roomNumber + ' ' + targetRoom.users.size();
+        String tableStatus;
+        tableStatus = targetRoom.roomNumber + " " + targetRoom.users.size();
         for(int i=0;i<targetRoom.users.size();i++){
             clientThread userThread = targetRoom.users.get(i);
-            tableStatus += ' ' + userThread.me.userName + ' ' + userThread.me.ready;
+            tableStatus += " " + userThread.me.userName + " " + userThread.me.ready;
         }
         return tableStatus;
     }
@@ -597,9 +604,13 @@ class clientThread extends Thread{
     {
         Room newRoom = new Room();
         newRoom.game = null;
+        newRoom.users = new ArrayList<>();
         newRoom.users.add(this);
         newRoom.state = 0;
-        newRoom.roomNumber = roomArray.get(roomArray.size()).roomNumber + 1;
+        if(roomArray.size() == 0)
+            newRoom.roomNumber = 1;
+        else
+            newRoom.roomNumber = roomArray.get(roomArray.size()).roomNumber + 1;
         roomArray.add(newRoom);
         me.theRoom = newRoom;
         return newRoom;
@@ -622,7 +633,7 @@ class clientThread extends Thread{
         try {
             int searchIndex;
             String tablesStatusString = "tablesStatus ";
-            String tableList = "";
+            String tableList = new String();
             for(searchIndex = 0; searchIndex < roomArray.size();searchIndex++){
                 tableList += " " + generateTableStatusString(roomArray.get(searchIndex));
             }
@@ -714,6 +725,9 @@ class clientThread extends Thread{
             System.out.println("Warning: In quitRoomNoDout(), me is already deleted");
             return null;
         }
+        if(me.theRoom.users.size() == 0){
+            roomArray.remove(me.theRoom);
+        }
         Room lao = me.theRoom;
         me.theRoom = null;
         return lao;
@@ -756,17 +770,17 @@ class clientThread extends Thread{
     {
         try{
             getMEReady();
-            if(me.theRoom.state == 3)
-                me.theRoom.allReadyLock = 1;
             dout.write(("ready check\r\n").getBytes("UTF-8"));
             me.theRoom.notifyReadyStatus();
-
-            //start the game
-            Game newGame = new Game(me.theRoom.users, me.theRoom);
-            me.theRoom.game = newGame;
-            newGame.gameStartNotifier();
-            newGame.landLordInvitation();
-            me.theRoom.allReadyLock = 0;
+            if(me.theRoom.state == 3) {
+                me.theRoom.allReadyLock = 1;
+                //start the game
+                Game newGame = new Game(me.theRoom.users, me.theRoom);
+                me.theRoom.game = newGame;
+                newGame.gameStartNotifier();
+                newGame.landLordInvitation();
+                me.theRoom.allReadyLock = 0;
+            }
 
         } catch (Exception ex){
             System.out.println("Exception in ready()");
@@ -797,7 +811,7 @@ class clientThread extends Thread{
             String readyStatusString = "readyStatus";
             Room myRoom = me.theRoom;
             for(int searchIndex = 0; searchIndex<myRoom.users.size(); searchIndex++){
-                readyStatusString += ' ' + myRoom.users.get(searchIndex).me.ready;
+                readyStatusString += " " + myRoom.users.get(searchIndex).me.ready;
             }
             readyStatusString+="\r\n";
             dout.write(readyStatusString.getBytes("UTF-8"));
@@ -867,17 +881,17 @@ class clientThread extends Thread{
             int myPlace = 0;
             for(int i = 0; i < 3;i++){
                 String userName = theGame.players.get(i).me.userName;
-                gameInfoString += ' ' + userName;
+                gameInfoString += " " + userName;
                 if(userName.equals(me.userName)){
                     myPlace = i;
                 }
             }
             CardDeck myCards = theGame.cardDecks.get(myPlace);
             for(int i = 0; i<17 ; i++){
-                gameInfoString += ' ' + myCards.cards.get(i).value;
+                gameInfoString += " " + myCards.cards.get(i).value;
             }
             for(int i = 0; i<3; i++){
-                gameInfoString += ' ' + theGame.unfoldedCards.get(i).value;
+                gameInfoString += " " + theGame.unfoldedCards.get(i).value;
             }
             gameInfoString += "\r\n";
             dout.write(gameInfoString.getBytes("UTF-8"));
@@ -897,7 +911,7 @@ class clientThread extends Thread{
             int myPlace = -1, landLordIndex = -1;
             for(int i = 0; i < 3;i++){
                 String userName = theGame.players.get(i).me.userName;
-                gameInfoString += ' ' + userName;
+                gameInfoString += " " + userName;
                 if(userName.equals(me.userName)){
                     myPlace = i;
                 }
@@ -907,12 +921,12 @@ class clientThread extends Thread{
             }
             CardDeck myCards = theGame.cardDecks.get(myPlace);
             for(int i = 0; i<17 ; i++){
-                gameInfoString += ' ' + myCards.cards.get(i).value;
+                gameInfoString += " " + myCards.cards.get(i).value;
             }
             for(int i = 0; i<3; i++){
-                gameInfoString += ' ' + theGame.unfoldedCards.get(i).value;
+                gameInfoString += " " + theGame.unfoldedCards.get(i).value;
             }
-            gameInfoString += ' ' + landLordIndex;
+            gameInfoString += " " + landLordIndex;
             gameInfoString += "\r\n";
             dout.write(gameInfoString.getBytes("UTF-8"));
 
