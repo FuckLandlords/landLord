@@ -8,6 +8,8 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -75,6 +77,8 @@ public class client extends JApplet{
 	int[] gender = {MALE,FEMALE,MALE};     //0表示男性，1表示女性
 	
 	int landlord = 0;           //0 表示用户， 1表示左玩家，2表示右玩家  
+	
+	public ClientThread info;
 
 	public client() {
 		// TODO Auto-generated constructor
@@ -85,6 +89,9 @@ public class client extends JApplet{
 		flag = 0;
 		//setLayout(new BorderLayout(100, 100));
 		setLayout(null);
+		
+		info = new ClientThread(this);
+		info.start();
 	}
 	public void init() {
 		loadMedia();
@@ -132,16 +139,16 @@ public class client extends JApplet{
 		selectDesk.setVisible(false);
 		game.setVisible(false);
 //以下是乳鸽的
-		try
-		{
-			socket = new Socket(serverIP, serverPort);
-			os = new PrintWriter(socket.getOutputStream());
-			is = new BufferedReader(new InputStreamReader(socket.getInputStream()));	
-		}
-		catch(Exception e)
-		{
-			System.out.println("Connection failed!");
-		}
+//		try
+//		{
+//			socket = new Socket(serverIP, serverPort);
+//			os = new PrintWriter(socket.getOutputStream());
+//			is = new BufferedReader(new InputStreamReader(socket.getInputStream()));	
+//		}
+//		catch(Exception e)
+//		{
+//			System.out.println("Connection failed!");
+//		}
 	}
 	
 	private void loadMedia() {
@@ -234,6 +241,7 @@ public class client extends JApplet{
 //----------------------客户端线程开始------------------------------------------
 class ClientThread extends Thread
 {
+//<<<<<<< Updated upstream
 	Socket ClientSoc;
 
 	BufferedReader sin;
@@ -246,7 +254,7 @@ class ClientThread extends Thread
 	{
 		try
 		{
-			String ip = "";
+			String ip = "127.0.0.1";
 			ClientSoc=new Socket(ip,2015);
 			din=new DataInputStream(ClientSoc.getInputStream());
 			dout=new DataOutputStream(ClientSoc.getOutputStream());
@@ -268,14 +276,19 @@ class ClientThread extends Thread
 	public void run()
 	{
 		try{
-			String choice;
-			choice=br.readLine();
-			if(choice.startsWith("login")){
-				login_rec(choice);
-			} else if(choice.startsWith("logout")){
-				logout_rec(choice);
-			} else{
+			while(true)
+			{
+				System.out.println("wakhkh");
+				String choice;
+				choice=sin.readLine();
+				System.out.println(choice);
+				if(choice.startsWith("login")){
+					login_rec(choice);
+				} else if(choice.startsWith("logout")){
+					logout_rec(choice);
+				} else{
 
+				}
 			}
 		}catch (Exception ex){
 			System.out.println("LoLo");
@@ -297,12 +310,12 @@ class ClientThread extends Thread
 
 	}
 
-	public void login_send()
+	public void login_send(String userName, String password)
 	{
 		try{
 			//your turn
-			String userName = "";
-			String password = "";
+			//String userName = ;
+			//String password = "";
 			//my stuff
 			String toSend;
 			toSend = "login " + userName + ' ' + password + "\r\n";
@@ -313,12 +326,15 @@ class ClientThread extends Thread
 		}
 	}
 
-	public boolean login_rec(String clientMessage)
+	public void login_rec(String clientMessage)
 	{
 		clientMessage = clientMessage.substring(clientMessage.indexOf(' ')+1);
 		if(clientMessage.startsWith("s"))
-			return true;
-		return false;
+		{
+			god.showSelectPlay();
+			//return true;
+		}
+		//return false;
 	}
 
 	public void logout_send()
@@ -457,26 +473,9 @@ class ClientThread extends Thread
 					if (endElementIndex == -1)
 						endElementIndex = clientMessage.length() - 2;
 					readyList[i * 3 + j] = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+	
 				}
 			}
 		}
-		// your turn
-
 	}
-
-	public void joinUser_send()
-	{
-		try {
-			//your turn
-			String targetUserName = "";
-			String userName = "";
-			//my stuff
-			String toSend = "joinUser " + targetUserName + ' ' + userName + "\r\n";
-			dout.write(toSend.getBytes("UTF-8"));
-		} catch (Exception ex){
-			System.out.println("joinUser_send");
-			return;
-		}
-	}
-
 }

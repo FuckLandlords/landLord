@@ -324,8 +324,22 @@ class Announce extends JPanel{
 				infoDialog("密码不能为空");
 				return;
 			}
+			
+			if(username2.indexOf(" ") != -1){
+				infoDialog("用户名不能含有空格");
+				return;
+			}
+			
+			if(password2.indexOf(" ") != -1 ){
+				infoDialog("密码不能含有空格");
+				return;
+			}
+			
 			//p.os.write("login "+ username2 + " " + password2 + "\r\n");
-			p.showSelectPlay();
+			p.info.login_send(username2, password2);
+			
+			//p.info.login_rec(clientMessage)
+			//p.showSelectPlay();
 		}
 		public void mousePressed(MouseEvent e) {}
 		public void mouseReleased(MouseEvent e) {}
