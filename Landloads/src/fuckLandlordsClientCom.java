@@ -187,6 +187,7 @@ class ClientCom
             String toSend = "tablesStatus " + userName + "\r\n";
             dout.write(toSend.getBytes("UTF-8"));
         } catch (Exception ex){
+            System.out.println("tablesStatus_send");
             return;
         }
     }
@@ -228,13 +229,19 @@ class ClientCom
 
     }
 
-    public void joinUser()
+    public void joinUser_send()
     {
-        //your turn
-        String targetUserName = "";
-        String userName = "";
-        //my stuff
-        String toSend = "joinUser " + targetUserName + ' ' + userName + "\r\n";
+        try {
+            //your turn
+            String targetUserName = "";
+            String userName = "";
+            //my stuff
+            String toSend = "joinUser " + targetUserName + ' ' + userName + "\r\n";
+            dout.write(toSend.getBytes("UTF-8"));
+        } catch (Exception ex){
+            System.out.println("joinUser_send");
+            return;
+        }
     }
 
 }
