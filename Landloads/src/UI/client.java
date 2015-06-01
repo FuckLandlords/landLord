@@ -278,7 +278,6 @@ class ClientThread extends Thread
 		try{
 			while(true)
 			{
-				System.out.println("wakhkh");
 				String choice;
 				choice=sin.readLine();
 				System.out.println(choice);
@@ -286,6 +285,14 @@ class ClientThread extends Thread
 					login_rec(choice);
 				} else if(choice.startsWith("logout")){
 					logout_rec(choice);
+				} else if(choice.startsWith("startMatching")){
+					startMatching_rec(choice);
+				} else if(choice.startsWith("tableStatus")){
+					tablesStatus_rec(choice);
+				} else if(choice.startsWith("openNewRoom")){
+					openNewRoom_rec(choice);
+				} else if(choice.startsWith("tablesStatus")){
+					tablesStatus_rec(choice);
 				} else{
 
 				}
@@ -473,9 +480,98 @@ class ClientThread extends Thread
 					if (endElementIndex == -1)
 						endElementIndex = clientMessage.length() - 2;
 					readyList[i * 3 + j] = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
-	
 				}
 			}
 		}
+		// your turn
+
 	}
+
+	public void joinUser_send()
+	{
+		try {
+			//your turn
+			String targetUserName = "";
+			String userName = "";
+			//my stuff
+			String toSend = "joinUser " + targetUserName + ' ' + userName + "\r\n";
+			dout.write(toSend.getBytes("UTF-8"));
+		} catch (Exception ex){
+			System.out.println("joinUser_send");
+			return;
+		}
+	}
+
+	public void joinUser_rec(String clientMessage)
+	{
+		boolean successOrNot;
+		int roomIndex = -1, playerCounter = 0;
+		String[] playerList = new String[3];
+		int[] readyList = new int[3];
+		//my stuff
+		int startElementIndex = clientMessage.indexOf(' ') + 1;
+		int endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+		if(endElementIndex == -1)
+			endElementIndex = clientMessage.length() - 2;
+		if(clientMessage.substring(startElementIndex, endElementIndex).startsWith("c"))
+			successOrNot = true;
+		else
+			successOrNot = false;
+		if(successOrNot == true) {
+			roomIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+			startElementIndex = endElementIndex + 1;
+			endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+			playerCounter = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+			for (int i = 0; i < playerCounter; i++) {
+				startElementIndex = endElementIndex + 1;
+				endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+				playerList[i] = clientMessage.substring(startElementIndex, endElementIndex);
+				startElementIndex = endElementIndex + 1;
+				endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+				if (endElementIndex == -1)
+					endElementIndex = clientMessage.length() - 2;
+				readyList[i] = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+			}
+		}
+		//your turn
+
+	}
+
+	public void tableStatus_send(String userName)
+	{
+		try {
+			//my stuff
+			String toSend = "tableStatus " + userName + "\r\n";
+			dout.write(toSend.getBytes("UTF-8"));
+		} catch (Exception ex){
+			System.out.println("tableStatus_send");
+			return;
+		}
+	}
+
+	public void tableStatus_rec(String clientMessage)
+	{
+		int roomIndex = -1, playerCounter = 0;
+		String[] playerList = new String[3];
+		int[] readyList = new int[3];
+		//my stuff
+		int startElementIndex = clientMessage.indexOf(' ') + 1;
+		int endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+		roomIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+		startElementIndex = endElementIndex + 1;
+		endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+		playerCounter = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+		for(int i=0;i<playerCounter;i++){
+			startElementIndex = endElementIndex + 1;
+			endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+			playerList[i] = clientMessage.substring(startElementIndex, endElementIndex);
+			startElementIndex = endElementIndex + 1;
+			endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+			if(endElementIndex == -1)
+				endElementIndex = clientMessage.length()-2;
+			readyList[i] = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+		}
+		//your turn
+	}
+
 }

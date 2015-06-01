@@ -1,7 +1,6 @@
 /**
- * Created by ï¿½ï¿½ï¿½ï¿½ on 5/22/2015.
+ * Created by äÈÒã on 5/22/2015.
  */
-package server;
 import javax.lang.model.type.ArrayType;
 import java.lang.reflect.Array;
 import java.net.*;
@@ -443,6 +442,7 @@ class clientThread extends Thread{
                 System.out.println("Exception in run()'s sin.readLine()");
                 return;
             }
+            System.out.println(clientCommand);
             if(clientCommand.startsWith("logout")){
                 logout(clientCommand);
                 break;
@@ -472,6 +472,8 @@ class clientThread extends Thread{
                 gameInfo();
             } else if(clientCommand.startsWith("landLordCall")){
                 landLordCall(clientCommand);
+            } else if(clientCommand.startsWith("cardOut")){
+                cardOut(clientCommand);
             }
         }
     }
@@ -481,7 +483,6 @@ class clientThread extends Thread{
         while(true) {
             try {
                 String clientMessage = sin.readLine();
-                System.out.println(clientMessage);
                 int userNameIndex = clientMessage.indexOf(' ') + 1;
                 /*
                 if (userNameIndex == 0 || userNameIndex == clientMessage.length()) {
@@ -507,7 +508,6 @@ class clientThread extends Thread{
                     continue;
                 }
                 dout.write(("login success\r\n").getBytes("UTF-8"));
-
                 break;
             } catch (Exception ex) {
                 System.out.println("Exception in login()");
