@@ -5,18 +5,18 @@ import java.util.ArrayList;
 
 public class playCards
 {
-	//ArrayList<Card> cards = new ArrayList<Card>();		//当前选中的牌
-	Card[] cards;
+	//ArrayList<Card> cards = new ArrayList<Card>();		
+	Card[] cards;										//当前选中的牌
 	int cardCount;										//当前选中的牌数
 	int type;											//当前选中牌的类型
 	int beginNum;										//当前合法的牌的最小值
-	//ArrayList<Card> lastCards = new ArrayList<Card>();	//当前最大的牌
-	Card[] lastCards;
+	//ArrayList<Card> lastCards = new ArrayList<Card>();
+	Card[] lastCards;									//当前最大的牌
 	int lastCardCount;									//当前最大的牌数
 	int lastType;										//当前最大的牌的类型
 	int lastBeginNum;									//当前最大的牌的最小值
-	boolean playCard;									//这个牌可不可以出
-	boolean legalCard;									//这个牌型是不是合法
+	boolean playCard;									//当前选中牌能否出
+	boolean legalCard;									//当前选中牌型是否合法
 	
 	//client p;
 	
@@ -181,43 +181,43 @@ public class playCards
 		default:
 			//sequence
 			int i = 0;
-			if (cardCount % 5 == 0) {
-				int[] temp = new int[cardCount];
-				int j = 0;
-				for (j = 0; j < temp.length; j++) {
-					temp[j] = 0;
+			//if (cardCount % 1 == 0)
+			for (i = 0; i < cardCount - 1; i++) {
+				if (tempCard[i].getNumOfCard() - 1 != tempCard[i+1].getNumOfCard()) {
+					break;
 				}
-				j = 0;
-				temp[0] = 1;
-				for (i = 1; i < cardCount; i++) {
-					if (tempCard[i].getNumOfCard() != tempCard[i-1].getNumOfCard())
-						j++;
-					temp[j]++;
-				}
-				if (j < cardCount / 5 * 2) {
-					j = 0;
-					int j2 = 0;
-					for (j = 0; j < cardCount / 5 * 2 - cardCount / 5 + 1; j++) {
-						for (j2 = 0; j2 < cardCount / 5; j2++) {
-							if (temp[j+j2] <= 2) {
-								break;
-							}
-						}
-						if (j2 == cardCount / 5) {
-							type = 13;
-							legalCard = true;
-							int sum = 0;
-							for (int k = 0; k < j+j2; k++) {
-								sum += temp[k];
-							}
-							beginNum = tempCard[sum-1].getNumOfCard();
-							break;
-						}
-					}
-					if (legalCard) {
+			}
+			if (i == cardCount - 1 && tempCard[0].getNumOfCard() < 15 && tempCard[cardCount-1].getNumOfCard() > 2) {
+				type = 5;
+				legalCard = true;
+				beginNum = tempCard[cardCount-1].getNumOfCard();
+				break;
+			}
+			if (cardCount % 2 == 0) {
+				for (i = 0; i < cardCount - 2; i += 2) {
+					if (tempCard[i].getNumOfCard() != tempCard[i+1].getNumOfCard() || tempCard[i].getNumOfCard() - 1 != tempCard[i+2].getNumOfCard() || tempCard[i+2].getNumOfCard() != tempCard[i+3].getNumOfCard()) {
 						break;
 					}
-				}	
+				}
+				if (i == cardCount - 2 && tempCard[0].getNumOfCard() < 15 && tempCard[cardCount-1].getNumOfCard() > 2) {
+					type = 7;
+					legalCard = true;
+					beginNum = tempCard[cardCount-1].getNumOfCard();
+					break;
+				}
+			}
+			if (cardCount % 3 == 0) {
+				for (i = 0; i < cardCount - 3; i += 3) {
+					if (tempCard[i].getNumOfCard() == tempCard[i+1].getNumOfCard() && tempCard[i].getNumOfCard() == tempCard[i+2].getNumOfCard() && tempCard[i+3].getNumOfCard() == tempCard[i].getNumOfCard() - 1 &&
+						tempCard[i+3].getNumOfCard() == tempCard[i+4].getNumOfCard() && tempCard[i+3].getNumOfCard() == tempCard[i+5].getNumOfCard()) {}
+					else break;
+				}
+				if (i == cardCount - 3 && tempCard[0].getNumOfCard() < 15 && tempCard[cardCount-1].getNumOfCard() > 2) {
+					type = 11;
+					legalCard = true;
+					beginNum = tempCard[cardCount-1].getNumOfCard();
+					break;
+				}
 			}
 			if (cardCount % 4 == 0) {
 				int[] temp = new int[cardCount];
@@ -235,6 +235,20 @@ public class playCards
 				if (j < cardCount / 4 * 2) {
 					j = 0;
 					int j2 = 0;
+					int num1 = 0;
+					int num3 = 0;
+					for (int k = 0; k < temp.length; k++) {
+						if (temp[k] == 1) {
+							num1++;
+						}
+						else if (temp[k] == 3) {
+							num3++;
+						}
+					}
+					if (num1 != num3) {
+						legalCard = false;
+						break;
+					}
 					for (j = 0; j < cardCount / 4 * 2 - cardCount / 4 + 1; j++) {
 						for (j2 = 0; j2 < cardCount / 4; j2++) {
 							if (temp[j+j2] <= 2) {
@@ -257,43 +271,57 @@ public class playCards
 					}
 				}
 			}
-			if (cardCount % 3 == 0) {
-				for (i = 0; i < cardCount - 3; i += 3) {
-					if (tempCard[i].getNumOfCard() == tempCard[i+1].getNumOfCard() && tempCard[i].getNumOfCard() == tempCard[i+2].getNumOfCard() && tempCard[i+3].getNumOfCard() == tempCard[i].getNumOfCard() - 1 &&
-						tempCard[i+3].getNumOfCard() == tempCard[i+4].getNumOfCard() && tempCard[i+3].getNumOfCard() == tempCard[i+5].getNumOfCard()) {}
-					else break;
+			if (cardCount % 5 == 0) {
+				int[] temp = new int[cardCount];
+				int j = 0;
+				for (j = 0; j < temp.length; j++) {
+					temp[j] = 0;
 				}
-				if (i == cardCount - 3 && tempCard[0].getNumOfCard() < 15 && tempCard[cardCount-1].getNumOfCard() > 2) {
-					type = 11;
-					legalCard = true;
-					beginNum = tempCard[cardCount-1].getNumOfCard();
-					break;
+				j = 0;
+				temp[0] = 1;
+				for (i = 1; i < cardCount; i++) {
+					if (tempCard[i].getNumOfCard() != tempCard[i-1].getNumOfCard())
+						j++;
+					temp[j]++;
 				}
-			}
-			if (cardCount % 2 == 0) {
-				for (i = 0; i < cardCount - 2; i += 2) {
-					if (tempCard[i].getNumOfCard() != tempCard[i+1].getNumOfCard() || tempCard[i].getNumOfCard() - 1 != tempCard[i+2].getNumOfCard() || tempCard[i+2].getNumOfCard() != tempCard[i+3].getNumOfCard()) {
+				if (j < cardCount / 5 * 2) {
+					j = 0;
+					int j2 = 0;
+					int num3 = 0;
+					int num2 = 0;
+					for (int k = 0; k < temp.length; k++) {
+						if (temp[k] == 2) {
+							num2++;
+						}
+						else if (temp[k] == 3) {
+							num3++;
+						}
+					}
+					if (num2 != num3) {
+						legalCard = false;
 						break;
 					}
-				}
-				if (i == cardCount - 2 && tempCard[0].getNumOfCard() < 15 && tempCard[cardCount-1].getNumOfCard() > 2) {
-					type = 7;
-					legalCard = true;
-					beginNum = tempCard[cardCount-1].getNumOfCard();
-					break;
-				}
-			}
-			//if (cardCount % 1 == 0)
-			for (i = 0; i < cardCount - 1; i++) {
-				if (tempCard[i].getNumOfCard() - 1 != tempCard[i+1].getNumOfCard()) {
-					break;
-				}
-			}
-			if (i == cardCount - 1 && tempCard[0].getNumOfCard() < 15 && tempCard[cardCount-1].getNumOfCard() > 2) {
-				type = 5;
-				legalCard = true;
-				beginNum = tempCard[cardCount-1].getNumOfCard();
-				break;
+					for (j = 0; j < cardCount / 5 * 2 - cardCount / 5 + 1; j++) {
+						for (j2 = 0; j2 < cardCount / 5; j2++) {
+							if (temp[j+j2] <= 2) {
+								break;
+							}
+						}
+						if (j2 == cardCount / 5) {
+							type = 13;
+							legalCard = true;
+							int sum = 0;
+							for (int k = 0; k < j+j2; k++) {
+								sum += temp[k];
+							}
+							beginNum = tempCard[sum-1].getNumOfCard();
+							break;
+						}
+					}
+					if (legalCard) {
+						break;
+					}
+				}	
 			}
 			legalCard = false;
 			break;
@@ -400,78 +428,36 @@ public class playCards
 				lastBeginNum = tempCard[5].getNumOfCard();
 				break;
 			}
+			if (tempCard[0].getNumOfCard() - 1 == tempCard[1].getNumOfCard() && tempCard[1].getNumOfCard() - 1 == tempCard[2].getNumOfCard() && tempCard[3].getNumOfCard() - 1 == tempCard[4].getNumOfCard() && tempCard[4].getNumOfCard() - 1 == tempCard[5].getNumOfCard()) {
+				lastType = 5;
+				lastBeginNum = tempCard[5].getNumOfCard();
+				break;
+			}
 			break;
 		default:
 			//sequence
 			int i = 0;
-			if (lastCardCount % 5 == 0) {
-				int[] temp = new int[lastCardCount];
-				int j = 0;
-				for (j = 0; j < temp.length; j++) {
-					temp[j] = 0;
-				}
-				j = 0;
-				temp[0] = 1;
-				for (i = 1; i < lastCardCount; i++) {
-					if (tempCard[i].getNumOfCard() != tempCard[i-1].getNumOfCard())
-						j++;
-					temp[j]++;
-				}
-				if (j >= lastCardCount / 5 * 2) {
+			//if (lastCardCount % 1 == 0)
+			for (i = 0; i < lastCardCount - 1; i++) {
+				if (tempCard[i].getNumOfCard() - 1 != tempCard[i+1].getNumOfCard()) {
 					break;
-				}
-				j = 0;
-				int j2 = 0;
-				for (j = 0; j < lastCardCount / 5 * 2 - lastCardCount / 5 + 1; j++) {
-					for (j2 = 0; j2 < lastCardCount / 5; j2++) {
-						if (temp[j+j2] <= 2) {
-							break;
-						}
-					}
-					if (j2 == lastCardCount / 5) {
-						lastType = 13;
-						int sum = 0;
-						for (int k = 0; k < j+j2; k++) {
-							sum += temp[k];
-						}
-						lastBeginNum = tempCard[sum-1].getNumOfCard();
-						break;
-					}
 				}
 			}
-			if (lastCardCount % 4 == 0) {
-				int[] temp = new int[lastCardCount];
-				int j = 0;
-				for (j = 0; j < temp.length; j++) {
-					temp[j] = 0;
-				}
-				j = 0;
-				temp[0] = 1;
-				for (i = 1; i < lastCardCount; i++) {
-					if (tempCard[i].getNumOfCard() != tempCard[i-1].getNumOfCard())
-						j++;
-					temp[j]++;
-				}
-				if (j >= lastCardCount / 4 * 2) {
-					break;
-				}
-				j = 0;
-				int j2 = 0;
-				for (j = 0; j < lastCardCount / 4 * 2 - lastCardCount / 4 + 1; j++) {
-					for (j2 = 0; j2 < lastCardCount / 4; j2++) {
-						if (temp[j+j2] <= 2) {
-							break;
-						}
-					}
-					if (j2 == lastCardCount / 4) {
-						lastType = 8;
-						int sum = 0;
-						for (int k = 0; k < j+j2; k++) {
-							sum += temp[k];
-						}
-						lastBeginNum = tempCard[sum-1].getNumOfCard();
+			if (i == lastCardCount - 1 && tempCard[0].getNumOfCard() < 15 && tempCard[lastCardCount-1].getNumOfCard() > 2) {
+				lastType = 5;
+				lastBeginNum = tempCard[lastCardCount-1].getNumOfCard();
+				break;
+			}
+			if (lastCardCount % 2 == 0) {
+				for (i = 0; i < lastCardCount - 2; i += 2) {
+					if (tempCard[i].getNumOfCard() != tempCard[i+1].getNumOfCard() || tempCard[i].getNumOfCard() - 1 != tempCard[i+2].getNumOfCard() || tempCard[i+2].getNumOfCard() != tempCard[i+3].getNumOfCard()) {
 						break;
 					}
+				}
+				if (i == lastCardCount - 2 && tempCard[0].getNumOfCard() < 15 && tempCard[lastCardCount-1].getNumOfCard() > 2) {
+					lastType = 7;
+					lastBeginNum = tempCard[lastCardCount-1].getNumOfCard();
+					break;
 				}
 			}
 			if (lastCardCount % 3 == 0) {
@@ -486,28 +472,109 @@ public class playCards
 					break;
 				}
 			}
-			if (lastCardCount % 2 == 0) {
-				for (i = 0; i < lastCardCount - 2; i += 2) {
-					if (tempCard[i].getNumOfCard() != tempCard[i+1].getNumOfCard() || tempCard[i].getNumOfCard() - 1 != tempCard[i+2].getNumOfCard() || tempCard[i+2].getNumOfCard() != tempCard[i+3].getNumOfCard()) {
+			if (lastCardCount % 4 == 0) {
+				boolean test = false;
+				int[] temp = new int[lastCardCount];
+				int j = 0;
+				for (j = 0; j < temp.length; j++) {
+					temp[j] = 0;
+				}
+				j = 0;
+				temp[0] = 1;
+				for (i = 1; i < lastCardCount; i++) {
+					if (tempCard[i].getNumOfCard() != tempCard[i-1].getNumOfCard())
+						j++;
+					temp[j]++;
+				}
+				if (j < lastCardCount / 4 * 2) {
+					j = 0;
+					int j2 = 0;
+					int num1 = 0;
+					int num3 = 0;
+					for (int k = 0; k < temp.length; k++) {
+						if (temp[k] == 1) {
+							num1++;
+						}
+						else if (temp[k] == 3) {
+							num3++;
+						}
+					}
+					if (num1 != num3) {
+						legalCard = false;
+						break;
+					}
+					for (j = 0; j < lastCardCount / 4 * 2 - lastCardCount / 4 + 1; j++) {
+						for (j2 = 0; j2 < lastCardCount / 4; j2++) {
+							if (temp[j+j2] <= 2) {
+								break;
+							}
+						}
+						if (j2 == lastCardCount / 4) {
+							lastType = 8;
+							test = true;
+							int sum = 0;
+							for (int k = 0; k < j+j2; k++) {
+								sum += temp[k];
+							}
+							lastBeginNum = tempCard[sum-1].getNumOfCard();
+							break;
+						}
+					}
+					if (test) {
 						break;
 					}
 				}
-				if (i == lastCardCount - 2 && tempCard[0].getNumOfCard() < 15 && tempCard[lastCardCount-1].getNumOfCard() > 2) {
-					lastType = 7;
-					lastBeginNum = tempCard[lastCardCount-1].getNumOfCard();
-					break;
-				}
 			}
-			//if (lastCardCount % 1 == 0)
-			for (i = 0; i < lastCardCount - 1; i++) {
-				if (tempCard[i].getNumOfCard() - 1 != tempCard[i+1].getNumOfCard()) {
-					break;
+			if (lastCardCount % 5 == 0) {
+				boolean test = false;
+				int[] temp = new int[lastCardCount];
+				int j = 0;
+				for (j = 0; j < temp.length; j++) {
+					temp[j] = 0;
 				}
-			}
-			if (i == lastCardCount - 1 && tempCard[0].getNumOfCard() < 15 && tempCard[lastCardCount-1].getNumOfCard() > 2) {
-				lastType = 5;
-				lastBeginNum = tempCard[lastCardCount-1].getNumOfCard();
-				break;
+				j = 0;
+				temp[0] = 1;
+				for (i = 1; i < lastCardCount; i++) {
+						j++;
+					temp[j]++;
+				}
+				if (j < lastCardCount / 5 * 2) {
+					j = 0;
+					int j2 = 0;
+					int num3 = 0;
+					int num2 = 0;
+					for (int k = 0; k < temp.length; k++) {
+						if (temp[k] == 2) {
+							num2++;
+						}
+						else if (temp[k] == 3) {
+							num3++;
+						}
+					}
+					if (num2 != num3) {
+						break;
+					}
+					for (j = 0; j < lastCardCount / 5 * 2 - lastCardCount / 5 + 1; j++) {
+						for (j2 = 0; j2 < lastCardCount / 5; j2++) {
+							if (temp[j+j2] <= 2) {
+								break;
+							}
+						}
+						if (j2 == lastCardCount / 5) {
+							lastType = 13;
+							test = true;
+							int sum = 0;
+							for (int k = 0; k < j+j2; k++) {
+								sum += temp[k];
+							}
+							lastBeginNum = tempCard[sum-1].getNumOfCard();
+							break;
+						}
+					}
+					if (test) {
+						break;
+					}
+				}
 			}
 			break;
 		}
@@ -550,7 +617,7 @@ public class playCards
 				playCard = false;
 				break;
 			}
-			if (beginNum > lastBeginNum) {
+			if (beginNum > lastBeginNum && cardCount == lastCardCount) {
 				playCard = true;
 				break;
 			}
