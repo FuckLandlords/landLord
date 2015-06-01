@@ -90,6 +90,7 @@ public class SelectPlay extends JPanel {
 				g.drawImage(image_return, 0, 0, d.width, d.height, null);
 			}
 		};
+		returnJPanel.addMouseListener(new Click_return());
 		returnJPanel.setOpaque(false);
 		
 		name = new JPanel(){
@@ -300,6 +301,24 @@ public class SelectPlay extends JPanel {
 		}
 		
 	}
+	
+	class Click_return implements MouseListener{
+
+		public void mouseClicked(MouseEvent e) {
+			//p.showHelp();
+			p.info.logout_send(p.player, p.password);
+		}
+		public void mousePressed(MouseEvent e) {}
+		public void mouseReleased(MouseEvent e) {}
+		public void mouseEntered(MouseEvent e) {
+			setCursor(new Cursor(Cursor.HAND_CURSOR));
+		}
+		public void mouseExited(MouseEvent e) {
+			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		}
+		
+	}
+
 	
 	class Click_free implements MouseListener{
 

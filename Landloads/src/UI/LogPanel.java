@@ -337,7 +337,8 @@ class Announce extends JPanel{
 			
 			//p.os.write("login "+ username2 + " " + password2 + "\r\n");
 			p.info.login_send(username2, password2);
-			
+			p.player = username2;
+			p.password = password2;
 			//p.info.login_rec(clientMessage)
 			//p.showSelectPlay();
 		}

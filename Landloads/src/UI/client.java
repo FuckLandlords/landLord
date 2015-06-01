@@ -10,14 +10,11 @@ import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
 import javax.swing.JApplet;
-import javax.swing.JPanel;
-
 import UI.BackgroundPanel;
 
 public class client extends JApplet{
@@ -65,6 +62,7 @@ public class client extends JApplet{
 	int tableIndex = 0;			//所在桌号
 	int playerCounter = 0;		//所在桌玩家数量
 	String player = "me";		//用户名称，具体信息在注册时补充
+	String password = "";
 	String player1 = "游客1";		//左边玩家名称，获取
 	String player2 = "游客2";		//右边玩家名称，获取
 	
@@ -191,8 +189,21 @@ public class client extends JApplet{
 		bgp.setVisible(true);
 		help.setVisible(false);
 		selectDesk.setVisible(false);
+		game.setVisible(false);
 		
 	}
+	
+	public void showLogJpanel() {
+		log.setVisible(true);
+		selectPlay.setVisible(false);
+		myData.setVisible(false);
+		bgp.setVisible(true);
+		help.setVisible(false);
+		selectDesk.setVisible(false);
+		game.setVisible(false);
+		
+	}
+
 	
 	public void showMyData() {
 		selectPlay.setVisible(false);
@@ -200,6 +211,7 @@ public class client extends JApplet{
 		bgp.setVisible(false);
 		log.setVisible(false);
 		help.setVisible(false);
+		game.setVisible(false);
 	}
 	
 	public void showHelp() {
@@ -341,15 +353,16 @@ class ClientThread extends Thread
 			god.showSelectPlay();
 			//return true;
 		}
+		return;
 		//return false;
 	}
 
-	public void logout_send()
+	public void logout_send(String userName, String password)
 	{
 		try{
 			//your turn
-			String userName = "";
-			String password = "";
+			//String userName = "";
+			//String password = "";
 			//my stuff
 			String toSend;
 			toSend = "logout " + userName + ' ' + password + "\r\n";
@@ -360,12 +373,17 @@ class ClientThread extends Thread
 		}
 	}
 
-	public boolean logout_rec(String clientMessage)
+	public void logout_rec(String clientMessage)
 	{
 		clientMessage = clientMessage.substring(clientMessage.indexOf(' ')+1);
 		if(clientMessage.startsWith("s"))
-			return true;
-		return false;
+		{
+			//god.sh
+			god.showLogJpanel();
+		}
+		return;
+			//return true;
+		//return false;
 	}
 
 	public void startMatching_send()
