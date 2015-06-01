@@ -1,1 +1,1 @@
-for files in `ls 扑克*`;do mv $files 扑克${$files#poker}; done
+for i in `ls *.png`;do xcrun -sdk iphoneos pngcrush -revert-iphone-optimizations $i /tmp/$i; mv /tmp/$i $i; done

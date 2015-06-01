@@ -66,9 +66,8 @@ public class client extends JApplet{
 	String player1 = "游客1";		//左边玩家名称，获取
 	String player2 = "游客2";		//右边玩家名称，获取
 	
-	int headNum = 17;                 //用户玩家头像
-	int headNum1 = 16;           //左边玩家头像，获取
-	int headNum2 = 14;           //右边玩家头像，获取
+	int[]  headNum = {17,16,18};                 //用户玩家头像
+                       							//右边玩家头像，获取
 	
 	boolean hasleft = true;    //是否有左边玩家
 	boolean hasRight = true;   //是否有右边玩家

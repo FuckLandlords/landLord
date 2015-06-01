@@ -26,7 +26,7 @@ public class Game extends JPanel{
 	
 	//一些常量 
 	static int SMOKE = 1;
-	static int TIMER_NUM = 5;
+	static int TIMER_NUM = 6;
 	static int USER = 0;
 	static int LEFT_USER = 1;
 	static int RIGHT_USER = 2;
@@ -163,6 +163,8 @@ public class Game extends JPanel{
 	JPanel three_cards_jpanel;
 	Card[] three_cards;
 	
+	//
+	
 	
 	public Game(client p){
 		this.p = p;
@@ -216,7 +218,7 @@ public class Game extends JPanel{
 	 */
 	public void initLeft(){
 		remove(headPicture[1]);
-		headPicture[1] = new HeadPicture(image_frame, image_head[p.headNum1-1]);
+		headPicture[1] = new HeadPicture(image_frame, image_head[p.headNum[1]-1]);
 		add(headPicture[1]);
 		textInfo[0].setText(p.player1);
 		repaint();
@@ -227,7 +229,7 @@ public class Game extends JPanel{
 	 */
 	public void initRight(){
 		remove(headPicture[2]);
-		headPicture[2] = new HeadPicture(image_frame, image_head[p.headNum2-1]);
+		headPicture[2] = new HeadPicture(image_frame, image_head[p.headNum[2]-1]);
 		add(headPicture[2]);
 		textInfo[1].setText(p.player2);
 		repaint();
@@ -237,23 +239,23 @@ public class Game extends JPanel{
 	 * 左边玩家进桌--有烟雾效果
 	 */
 	public void leftJoin(){
-		getSomke(1);
+		getSmoke(1);
 	}
 	
 	/*
 	 * 右边玩家进桌，有烟雾效果
 	 */
 	public void rightJoin(){
-		getSomke(2);
+		getSmoke(2);
 	}
 	
 	/*
 	 * 选完地主之后换头像
 	 */
 	public void changeHeadAll(){
-		getSomke(3);
-		getSomke(4);
-		getSomke(5);
+		getSmoke(3);
+		getSmoke(4);
+		getSmoke(5);
 	}
 	/*
 	 * num = 1 表示左边玩家进桌
@@ -263,7 +265,7 @@ public class Game extends JPanel{
 	 * num = 5 表示右玩家换地主或者农民头像
 	 */
 	
-	public void getSomke(int num) {
+	public void getSmoke(int num) {
 		if(num == 1){
 			animationTimer[0] = new Timer(100, new StartAnimationTimerListener(SMOKE, num));
 			animationTimer[0].start();
@@ -284,7 +286,10 @@ public class Game extends JPanel{
 			animationTimer[4] = new Timer(100, new StartAnimationTimerListener(SMOKE, num));
 			animationTimer[4].start();
 		}
-
+		else if(num == 6){
+			animationTimer[5] = new Timer(100, new StartAnimationTimerListener(SMOKE, num));
+			animationTimer[5].start();
+		}
 
 		
 	}
@@ -312,6 +317,9 @@ public class Game extends JPanel{
 			left_poker_out = new Poker_Out(left_out);
 			add(left_poker_out);
 			left_poker_out.setOpaque(false);
+		}
+		if(left_poker_remain_num == 0){
+			setWinner(LEFT_USER);
 		}
 		remove(left_poker_remain);
 		left_poker_remain = new MyJpanel(image_poker_left[left_poker_remain_num-1]);
@@ -356,6 +364,65 @@ public class Game extends JPanel{
 		repaint();
 	}
 	
+	/*
+	 * 重新开始新的一局
+	 */
+	
+	public void restart() {
+		p.hasleft = true;
+		p.hasRight = true;
+		//init();
+		//repaint();
+		ready[3].setVisible(true);
+		poker_out.setVisible(false);
+		
+		callbuttonJpanel.setVisible(false);
+		notcallbuttonJpanel.setVisible(false);
+		
+		clock.setVisible(false);
+		
+		outbuttonJpanel.setVisible(false);
+		notoutbuttonJpanel.setVisible(false);
+		
+		three_cards_jpanel.setVisible(false);
+		
+		for(int j = 0;j < 20; j++){
+			myCardJPanels[j].setVisible(false);
+		}
+		left_poker_out.setVisible(false);
+		
+		left_poker_remain.setVisible(false);
+		left_poker_out.setVisible(false);
+		
+		right_poker_out.setVisible(false);
+		right_poker_remain.setVisible(false);
+		
+		getSmoke(6);
+		
+		
+	}
+	
+	/*
+	 * 结束一局之后恢复原来的头像
+	 */
+	
+	public void changeToMyheadpicture() {
+		for(int j = 0; j < 3; j++){
+			remove(headPicture[j]);
+			headPicture[j] = new HeadPicture(image_frame, image_head[p.headNum[j]-1]);
+			add(headPicture[j]);
+		}
+		repaint();
+	}
+	/*
+	 * 牌局结束后
+	 * num = 0 表示玩家赢
+	 * num = 1 表示左边玩家赢
+	 * num = 2 表示右边玩家赢
+	 */
+	public void  setWinner(int num) {
+		
+	}
 	/*
 	 * 不出牌或者不叫地主或者叫地主
 	 * type = 0 表示不出牌
@@ -581,19 +648,19 @@ public class Game extends JPanel{
 		maindesk = new MyJpanel(image_bigDesk);
 		menuback = new MyJpanel(image_menuback);
 		headPicture = new HeadPicture[3];
-		headPicture[0] = new HeadPicture(image_frame, image_head[p.headNum-1]);
+		headPicture[0] = new HeadPicture(image_frame, image_head[p.headNum[0]-1]);
 		headPicture[0].setOpaque(false);
 		add(headPicture[0]);
 		//setComponentZOrder(headPicture[0], 0);
 		if(p.hasleft)
-			headPicture[1] = new HeadPicture(image_frame, image_head[p.headNum1-1]);
+			headPicture[1] = new HeadPicture(image_frame, image_head[p.headNum[1]-1]);
 		else
 			headPicture[1] = new HeadPicture(image_transparent, image_transparent);
 		headPicture[1].setOpaque(false);
 		add(headPicture[1]);
 		//setComponentZOrder(headPicture[1], 0);
 		if(p.hasRight)
-			headPicture[2] = new HeadPicture(image_frame, image_head[p.headNum2-1]);
+			headPicture[2] = new HeadPicture(image_frame, image_head[p.headNum[2]-1]);
 		else
 			headPicture[2] = new HeadPicture(image_transparent, image_transparent);
 		headPicture[2].setOpaque(false);
@@ -971,13 +1038,18 @@ public class Game extends JPanel{
 			mt.addImage(image_head[j], 0);
 		}
 		
-		image_poker = new Image[4][13];
+		image_poker = new Image[5][13];
 		for(int i = 0;i<4;i++){
 			for(int j = 0; j< 13;j++){
 				image_poker[i][j] = getToolkit().getImage(str_poker + (i+1) +"_" + (j+1) +".png");
 				mt.addImage(image_poker[i][j], 0);
 			}
 		}
+		image_poker[4][0] = getToolkit().getImage(str_poker + 5 + "_" + 1 + ".png");
+		image_poker[4][1] = getToolkit().getImage(str_poker + 5 + "_" + 2 + ".png");
+		
+		mt.addImage(image_poker[4][0], 0);
+		mt.addImage(image_poker[4][1], 0);
 		
 		image_smoke = new Image[6];
 		for(int j = 0; j < 6; j++){
@@ -1057,27 +1129,13 @@ public class Game extends JPanel{
 	class Click_Return implements MouseListener{
 
 		public void mouseClicked(MouseEvent e) {
-			//p.showSelectDesk();
-			//changeHead();
-			//startGame();
-			//initLeft();
-			//initRight();
-			//startGame();
-			//changeHead();
-			//startTimer(1, 0);
-			//getSomke(1);
-			//getSomke(2);
-			//changeHeadAll();
-			//notOutOrCallLandlord(2, 0);
-			//notOutOrCallLandlord(2, 1);
-			//notOutOrCallLandlord(2, 2);
-			//userCallOrOut(1);
 			setLandlord(0);
 			Card[] a = new Card[13];
 			for(int j = 0; j < 13;j ++){
 				a[j] = new Card(1, j+1);
 			}
 			//getRightPoker(a);
+			restart();
 			
 		}
 		public void mousePressed(MouseEvent e) {}
@@ -1306,6 +1364,23 @@ public class Game extends JPanel{
 				count++;
 
 			}
+			else if (type == SMOKE && num == 6) {
+				if(count >= 6){
+					animationTimer[5].stop();
+					count = 0;
+					changeToMyheadpicture();
+				}
+				else {
+					for(int j = 0; j < 3; j++){
+						remove(headPicture[j]);
+						headPicture[j] = new HeadPicture(image_smoke[count], null);
+						add(headPicture[j]);
+					}
+					repaint();
+				}
+				count++;
+
+			}
 
 
 
@@ -1437,10 +1512,10 @@ class Card{
 	}
 	
 	public int getNumOfCard(){
-		if(color == 0 && num == 1){
+		if(color == 5 && num == 1){
 			return 16;
 		}
-		else if (color == 0 && num == 2) {
+		else if (color == 5 && num == 2) {
 			return 17;
 		}
 		else if (num == 1) {
