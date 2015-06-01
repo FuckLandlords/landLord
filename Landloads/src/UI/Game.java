@@ -164,6 +164,7 @@ public class Game extends JPanel{
 	Card[] three_cards;
 	
 	//
+	Card[] lastCards = {};
 	
 	
 	public Game(client p){
@@ -187,9 +188,31 @@ public class Game extends JPanel{
 	 */
 	public void initCard(){
 		myCard = new Card[20];
-		for(int j = 0;j < 20; j++){
-			myCard[j] = new Card(j%4+1, j%13+1);
-		}
+//		for(int j = 0;j < 20; j++){
+//			myCard[j] = new Card(j%4+1, j%13+1);
+//		}
+		myCard[0] = new Card(2, 9);
+		myCard[1] = new Card(3, 10);
+		myCard[2] = new Card(1, 7);
+		myCard[3] = new Card(3, 7);
+		myCard[4] = new Card(2, 7);
+		myCard[5] = new Card(4, 7);
+		myCard[6] = new Card(1, 8);
+		myCard[7] = new Card(2, 8);
+		myCard[8] = new Card(3, 8);
+		myCard[9] = new Card(1, 6);
+		myCard[10] = new Card(2, 6);
+		myCard[11] = new Card(3, 6);
+		myCard[12] = new Card(1, 2);
+		myCard[13] = new Card(2, 2);
+		myCard[14] = new Card(1, 1);
+		myCard[15] = new Card(2, 1);
+		myCard[16] = new Card(1, 9);
+		myCard[17] = new Card(2, 3);
+		myCard[18] = new Card(1, 4);
+		myCard[19] = new Card(1, 5);
+
+
 		sortCard(17);
 		for(int j = 19 ; j >= 0; j-- ){
 			myCardJPanels[j] = new CardJPanel(myCard[j], image_poker[myCard[j].color-1][myCard[j].num-1]);
@@ -1135,7 +1158,7 @@ public class Game extends JPanel{
 				a[j] = new Card(1, j+1);
 			}
 			//getRightPoker(a);
-			restart();
+			//restart();
 			
 		}
 		public void mousePressed(MouseEvent e) {}
@@ -1421,12 +1444,21 @@ public class Game extends JPanel{
 				notOutOrCallLandlord(0, 0);
 			}
 			else {
-				outbuttonJpanel.setVisible(false);
-				notoutbuttonJpanel.setVisible(false);
 				//出牌
 				Card[] c = getSelectedCards();
 				//判断是否可出牌
-		
+				playCards card = new playCards(c, c.length, lastCards, lastCards.length);
+				card.judgeType();
+				if (!card.legalCard) {
+					return;
+				}
+				card.judgeLastType();
+				card.play();
+				if (!card.playCard) {
+					return;
+				}
+				outbuttonJpanel.setVisible(false);
+				notoutbuttonJpanel.setVisible(false);
 				for(int j = 0; j < 20; j++){
 					if (myCardJPanels[j].selected) {
 						myCardJPanels[j].out = true;
