@@ -360,6 +360,7 @@ class Game{
             h.notReady();
         }
         theRoom.game = null;
+        theRoom.notifyTableStatus();
 
     }
 }
@@ -620,7 +621,7 @@ class clientThread extends Thread{
             String tablesStatusString = "tablesStatus ";
             String tableList = "";
             for(searchIndex = 0; searchIndex < roomArray.size();searchIndex++){
-                tableList += " (" + generateTableStatusString(roomArray.get(searchIndex)) + ')';
+                tableList += " " + generateTableStatusString(roomArray.get(searchIndex));
             }
             tablesStatusString += searchIndex + tableList + "\r\n";
             dout.write(tablesStatusString.getBytes("UTF-8"));

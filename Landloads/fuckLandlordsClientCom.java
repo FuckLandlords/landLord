@@ -63,82 +63,178 @@ class ClientCom
 
     }
 
-    public void login_send(String toSend)
+    public void login_send()
     {
         try{
+            //your turn
+            String userName = "";
+            String password = "";
+            //my stuff
+            String toSend;
+            toSend = "login " + userName + ' ' + password + "\r\n";
             dout.write(toSend.getBytes("UTF-8"));
         } catch (Exception ex){
+            System.out.println("login_send");
             return;
         }
     }
 
-    public boolean login_rec()
+    public boolean login_rec(String clientMessage)
     {
-        String rec = receiveMessage();
-        rec = rec.substring(rec.indexOf(' ')+1);
-        if(rec.startsWith("s"))
+        clientMessage = clientMessage.substring(clientMessage.indexOf(' ')+1);
+        if(clientMessage.startsWith("s"))
             return true;
         return false;
     }
 
-    public void logout_send(String toSend)
+    public void logout_send()
     {
         try{
+            //your turn
+            String userName = "";
+            String password = "";
+            //my stuff
+            String toSend;
+            toSend = "logout " + userName + ' ' + password + "\r\n";
             dout.write(toSend.getBytes("UTF-8"));
         } catch (Exception ex){
+            System.out.println("logout_send");
             return;
         }
     }
 
-    public boolean logout_rec()
+    public boolean logout_rec(String clientMessage)
     {
-        String rec = receiveMessage();
-        rec = rec.substring(rec.indexOf(' ')+1);
-        if(rec.startsWith("s"))
+        clientMessage = clientMessage.substring(clientMessage.indexOf(' ')+1);
+        if(clientMessage.startsWith("s"))
             return true;
         return false;
     }
 
-    public void startMatching_send(String toSend)
+    public void startMatching_send()
     {
         try{
+            //your turn
+            String userName = "";
+            //my stuff
+            String toSend;
+            toSend = "startMatching " + userName + "\r\n";
+            dout.write(toSend.getBytes("UTF-8"));
+        } catch (Exception ex){
+            System.out.println("startMatching_send");
+            return;
+        }
+    }
+
+    public void startMatching_rec(String clientMessage)
+    {
+        int roomIndex = -1, playerCounter = 0;
+        String[] playerList = new String[3];
+        int[] readyList = new int[3];
+        //my stuff
+        int startElementIndex = clientMessage.indexOf(' ') + 1;
+        int endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+        roomIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+        startElementIndex = endElementIndex + 1;
+        endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+        playerCounter = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+        for(int i=0;i<playerCounter;i++){
+            startElementIndex = endElementIndex + 1;
+            endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+            playerList[i] = clientMessage.substring(startElementIndex, endElementIndex);
+            startElementIndex = endElementIndex + 1;
+            endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+            if(endElementIndex == -1)
+                endElementIndex = clientMessage.length()-2;
+            readyList[i] = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+        }
+        //your turn
+
+    }
+
+    public void openNewRoom_send()
+    {
+        try{
+            //your turn
+            String userName = "";
+            //my stuff
+            String toSend;
+            toSend = "openNewRoom " + userName + "\r\n";
+            dout.write(toSend.getBytes("UTF-8"));
+        } catch (Exception ex){
+            System.out.println("openNewRoom_send");
+            return;
+        }
+    }
+
+    public void openNewRoom_rec(String clientMessage)
+    {
+        int newRoomIndex = -1;
+        //my stuff
+        int startElementIndex = clientMessage.indexOf(' ') + 1;
+        int endElementIndex = clientMessage.length() - 2;
+        newRoomIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+        //your turn
+
+    }
+
+    public void tablesStatus_send()
+    {
+        try{
+            //your turn
+            String userName = "";
+            //my stuff
+            String toSend = "tablesStatus " + userName + "\r\n";
             dout.write(toSend.getBytes("UTF-8"));
         } catch (Exception ex){
             return;
         }
     }
 
-    public boolean startMatching_rec()
-    {
-        return false;
-    }
-
-    public void openNewRoom_send(String toSend)
-    {
-        try{
-            dout.write(toSend.getBytes("UTF-8"));
-        } catch (Exception ex){
-            return;
+    public void tablesStatus_rec(String clientMessage) {
+        int roomCounter = 0;
+        int[] roomIndex, playerCounter;
+        String[] playerList;
+        int[] readyList;
+        //my stuff
+        int startElementIndex = clientMessage.indexOf(' ') + 1;
+        int endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+        roomCounter = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+        if (roomCounter != 0) {
+            roomIndex = new int[roomCounter];
+            playerCounter = new int[roomCounter];
+            playerList = new String[roomCounter * 3];
+            readyList = new int[roomCounter * 3];
+            for (int i = 0; i < roomCounter; i++) {
+                startElementIndex = endElementIndex + 1;
+                endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+                roomIndex[i] = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+                startElementIndex = endElementIndex + 1;
+                endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+                playerCounter[i] = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+                for (int j = 0; j < playerCounter[i]; j++) {
+                    startElementIndex = endElementIndex + 1;
+                    endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+                    playerList[i * 3 + j] = clientMessage.substring(startElementIndex, endElementIndex);
+                    startElementIndex = endElementIndex + 1;
+                    endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+                    if (endElementIndex == -1)
+                        endElementIndex = clientMessage.length() - 2;
+                    readyList[i * 3 + j] = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+                }
+            }
         }
-    }
-
-    public void openNewRoom_rec()
-    {
+        // your turn
 
     }
 
-    public void tablesStatus_send(String toSend)
+    public void joinUser()
     {
-        try{
-            dout.write(toSend.getBytes("UTF-8"));
-        } catch (Exception ex){
-            return;
-        }
-    }
-
-    public void tablesStatus_rec()
-    {
-
+        //your turn
+        String targetUserName = "";
+        String userName = "";
+        //my stuff
+        String toSend = "joinUser " + targetUserName + ' ' + userName + "\r\n";
     }
 
 }
