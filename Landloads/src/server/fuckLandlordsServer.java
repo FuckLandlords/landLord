@@ -1,5 +1,5 @@
 /**
- * Created by ï¿½ï¿½ï¿½ï¿½ on 5/22/2015.
+ * Created by äÈÒã on 5/22/2015.
  */
 package server;
 import javax.lang.model.type.ArrayType;
@@ -749,6 +749,7 @@ class clientThread extends Thread{
             {
                 String outputString = "quitRoom check " + me.userName + "\r\n";
                 quitedRoom.notifyJoin(outputString);
+                dout.write(outputString.getBytes("UTF-8"));
             }
 
         } catch (Exception ex){
