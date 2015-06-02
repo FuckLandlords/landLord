@@ -51,33 +51,35 @@ public class client extends JApplet{
 	int localY;
 	
 /*
- * 浠ヤ笅鏄钩楦界殑
+ * 以下是乳鸽的
  */
 	Socket socket;
 	PrintWriter os;
 	BufferedReader is;
-//闇�瑕佽窡鏈嶅姟鍣ㄤ竴鑷�
+//需要跟服务器一致
 	String serverIP = "127.0.0.1";
 	int serverPort = 4700;
 	
-	//娓告垙淇℃伅
-	int tableIndex = 0;			//鎵�鍦ㄦ鍙�
-	int playerCounter = 0;		//鎵�鍦ㄦ鐜╁鏁伴噺
-	String player = "me";		//鐢ㄦ埛鍚嶇О锛屽叿浣撲俊鎭湪娉ㄥ唽鏃惰ˉ鍏�
+	//游戏信息
+	int tableIndex = 0;			//所在桌号
+	int playerCounter = 0;		//所在桌玩家数量
+	String player = "me";		//用户名称，具体信息在注册时补充
 	String password = "";
 	String player1 = "";		//宸﹁竟鐜╁鍚嶇О锛岃幏鍙�
 	String player2 = "";		//鍙宠竟鐜╁鍚嶇О锛岃幏鍙�
 	int playerIndex = 0;
+
 	
-	int[]  headNum = {17,16,18};                 //鐢ㄦ埛鐜╁澶村儚
-                       							//鍙宠竟鐜╁澶村儚锛岃幏鍙�
-	
+	int[]  headNum = {17,16,18};                 //用户玩家头像
+                       							//右边玩家头像，获取
+
 	boolean hasleft = false;    //鏄惁鏈夊乏杈圭帺瀹�
 	boolean hasRight = false;   //鏄惁鏈夊彸杈圭帺瀹�
+
 	
-	int[] gender = {MALE,FEMALE,MALE};     //0琛ㄧず鐢锋�э紝1琛ㄧず濂虫��
+	int[] gender = {MALE,FEMALE,MALE};     //0表示男性，1表示女性
 	
-	int landlord = 0;           //0 琛ㄧず鐢ㄦ埛锛� 1琛ㄧず宸︾帺瀹讹紝2琛ㄧず鍙崇帺瀹�  
+	int landlord = 0;           //0 表示用户， 1表示左玩家，2表示右玩家  
 	
 	public ClientThread info;
 
@@ -142,7 +144,7 @@ public class client extends JApplet{
 		help.setVisible(false);
 		selectDesk.setVisible(false);
 		game.setVisible(false);
-//浠ヤ笅鏄钩楦界殑
+//以下是乳鸽的
 //		try
 //		{
 //			socket = new Socket(serverIP, serverPort);
@@ -278,7 +280,7 @@ public class client extends JApplet{
 }
 
 
-//----------------------瀹㈡埛绔嚎绋嬪紑濮�------------------------------------------
+//----------------------客户端线程开始------------------------------------------
 class ClientThread extends Thread
 {
 //<<<<<<< Updated upstream
