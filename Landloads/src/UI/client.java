@@ -849,6 +849,7 @@ class ClientThread extends Thread
         }
         if(quitterName.equals(god.player)){
         	god.showSelectDesk();
+        	god.isFirstEnterDesk = true;
         }
         else if (quitterName.equals(god.player1)) {
 			god.game.leftQuit();

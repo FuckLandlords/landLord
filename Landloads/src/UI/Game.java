@@ -1070,6 +1070,7 @@ public class Game extends JPanel{
 		headPicture[num] = new HeadPicture(image_transparent, image_transparent);
 		add(headPicture[num]);
 		headPicture[num].setOpaque(false);
+		textInfo[num-1].setText("");
 		repaint();
 	}
 	/*
