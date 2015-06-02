@@ -683,7 +683,7 @@ class ClientThread extends Thread
         try {
             String toSend = "joinRoom "+ roomIndex + " " + userName + "\r\n";
             dout.write(toSend.getBytes());
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("joinRoom_send");
             return;
         }
@@ -728,7 +728,7 @@ class ClientThread extends Thread
         try {
             String toSend = "quitRoom "+ userName + " " + roomIndex + "\r\n";
             dout.write(toSend.getBytes());
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("quitRoom_send");
             return;
         }
@@ -754,7 +754,7 @@ class ClientThread extends Thread
         try {
             String toSend = "ready " + "\r\n";
             dout.write(toSend.getBytes());
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("ready_send");
             return;
         }
@@ -780,7 +780,7 @@ class ClientThread extends Thread
         try {
             String toSend = "notReady " + "\r\n";
             dout.write(toSend.getBytes());
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("notReady_send");
             return;
         }
@@ -806,7 +806,7 @@ class ClientThread extends Thread
         try {
             String toSend = "readyStatus "+ userName + "\r\n";
             dout.write(toSend.getBytes());
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("readyStatus_send");
             return;
         }
