@@ -147,6 +147,13 @@ public class SelectDesk extends JPanel{
 			infoOfPerDesk[j].setSize(40, 40);
 		}
 	}
+	
+	public void initDesk() {
+		for(int j = 0; j < 20; j++){
+			numOfPerDesk[j] = p.deskNum[j];
+			infoOfPerDesk[j].setText(numOfPerDesk[j] + "/3\n" + (j+1) + "桌");
+		}
+	}
 	private void loadMedia() {
 		// TODO Auto-generated method stub
 		mt = new MediaTracker(this);

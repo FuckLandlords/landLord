@@ -821,6 +821,33 @@ public class Game extends JPanel{
 		add(menuback);
 				
 	}
+	/*
+	 * 初始化左边玩家和右边玩家
+	 */
+	public void initPlayer() {
+		if(p.hasleft){
+			textInfo[0].setText(p.player1);;
+		}
+		else
+			textInfo[0].setText("");
+		if(p.hasRight)
+			textInfo[1].setText(p.player2);
+		else
+			textInfo[1].setText("");
+		if(p.hasleft)
+		{
+			remove(headPicture[1]);
+			headPicture[1] = new HeadPicture(image_frame, image_head[p.headNum[1]-1]);
+			add(headPicture[1]);
+			headPicture[1].setOpaque(false);
+		}
+		if(p.hasRight){
+			remove(headPicture[2]);
+			headPicture[2] = new HeadPicture(image_frame, image_head[p.headNum[2]-1]);
+			add(headPicture[2]);
+			headPicture[2].setOpaque(false);
+		}
+	}
 	
 	/*
 	 * (non-Javadoc)

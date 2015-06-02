@@ -339,7 +339,8 @@ public class SelectPlay extends JPanel {
 	class Click_Classic implements MouseListener{
 
 		public void mouseClicked(MouseEvent e) {
-			p.showSelectDesk();
+			//p.showSelectDesk();
+			p.info.tablesStatus_send();
 		}
 		public void mousePressed(MouseEvent e) {}
 		public void mouseReleased(MouseEvent e) {}

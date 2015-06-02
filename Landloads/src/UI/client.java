@@ -39,6 +39,8 @@ public class client extends JApplet{
 	SelectDesk selectDesk;
 	Game game;
 	Container p;
+	
+	int[] deskNum;
 	//SelectLevel selectLevel;
 	
 	int width = 960;
@@ -63,14 +65,15 @@ public class client extends JApplet{
 	int playerCounter = 0;		//鎵�鍦ㄦ鐜╁鏁伴噺
 	String player = "me";		//鐢ㄦ埛鍚嶇О锛屽叿浣撲俊鎭湪娉ㄥ唽鏃惰ˉ鍏�
 	String password = "";
-	String player1 = "娓稿1";		//宸﹁竟鐜╁鍚嶇О锛岃幏鍙�
-	String player2 = "娓稿2";		//鍙宠竟鐜╁鍚嶇О锛岃幏鍙�
+	String player1 = "";		//宸﹁竟鐜╁鍚嶇О锛岃幏鍙�
+	String player2 = "";		//鍙宠竟鐜╁鍚嶇О锛岃幏鍙�
+	int playerIndex = 0;
 	
 	int[]  headNum = {17,16,18};                 //鐢ㄦ埛鐜╁澶村儚
                        							//鍙宠竟鐜╁澶村儚锛岃幏鍙�
 	
-	boolean hasleft = true;    //鏄惁鏈夊乏杈圭帺瀹�
-	boolean hasRight = true;   //鏄惁鏈夊彸杈圭帺瀹�
+	boolean hasleft = false;    //鏄惁鏈夊乏杈圭帺瀹�
+	boolean hasRight = false;   //鏄惁鏈夊彸杈圭帺瀹�
 	
 	int[] gender = {MALE,FEMALE,MALE};     //0琛ㄧず鐢锋�э紝1琛ㄧず濂虫��
 	
@@ -87,7 +90,7 @@ public class client extends JApplet{
 		flag = 0;
 		//setLayout(new BorderLayout(100, 100));
 		setLayout(null);
-		
+		deskNum = new int[20];
 		info = new ClientThread(this);
 		info.start();
 	}
@@ -95,6 +98,7 @@ public class client extends JApplet{
 		loadMedia();
 		
 		bgp = new BackgroundPanel(this);
+		
 		bgp.setSize(960, 640);
 		bgp.setLocation(0, 0);
 		
@@ -130,6 +134,8 @@ public class client extends JApplet{
 		p.add(bgp);
 		p.add(myData);
 		p.add(help);
+		//p.setComponentZOrder(bgp, 1);
+		//p.setComponentZOrder(game, 0);
 	
 		selectPlay.setVisible(false);
 		myData.setVisible(false);
@@ -166,20 +172,36 @@ public class client extends JApplet{
 		}catch(InterruptedException mye){System.out.println(mye);}
 
 	}
-	public void paint(Graphics g)
+	public void paintComponent(Graphics g)
 	{
-		super.paint(g);
-		//bgp.paintComponent(g);
-		if(flag == 0)
-		{
-			//log.setVisible(true);
-			//selectPlay.setVisible(false);
-		}
-		else if(flag == 1)
-		{
-			//log.setVisible(false);
-			//selectPlay.setVisible(true);
-		}
+		//bgp = new BackgroundPanel(this);
+		bgp.setSize(960, 640);
+		bgp.setLocation(0, 0);
+		
+		//log = new LogPanel(this);
+		log.setLocation(114, 0);
+		log.setSize(732, 640);
+		
+		//selectPlay = new SelectPlay(this);
+		selectPlay.setSize(960,640);
+		selectPlay.setLocation(0, 0);
+		
+		//myData = new MyData(this);
+		myData.setLocation(0, 0);
+		myData.setSize(960, 640);
+		
+		//help = new Help(this);
+		help.setLocation(0, 0);
+		help.setSize(960, 640);
+		
+		//selectDesk = new SelectDesk(this);
+		selectDesk.setLocation(0, 0);
+		selectDesk.setSize(960, 640);
+		
+		//game = new Game(this);
+		game.setLocation(0, 0);
+		game.setSize(960, 640);
+
 	}
 	
 	public void showSelectPlay() {
@@ -224,11 +246,17 @@ public class client extends JApplet{
 		selectPlay.setVisible(false);
 		game.setVisible(false);
 		bgp.setVisible(true);
+		//selectDesk
 		selectDesk.setVisible(true);
 	}
 	public void showGame() {
 		selectDesk.setVisible(false);
 		bgp.setVisible(true);
+		//remove(game);
+		//game = new Game(this);
+		//p.add(game);
+		//p.setComponentZOrder(game, 0);
+		game.initPlayer();
 		game.setVisible(true);
 	}
 	public static void main(String[] args) {
@@ -427,15 +455,18 @@ class ClientThread extends Thread
 		if(playerCounter == 1){
 			god.hasleft = false;
 			god.hasRight = false;
+			god.playerIndex = 0;
 		}
 		else if(playerCounter == 2){
 			if(playerList[0] == god.player){
 				god.hasRight = true;
 				god.player2 = playerList[1];
+				god.playerIndex = 0;
 			}
 			else{
 				god.hasleft = true;
 				god.player1 = playerList[0];
+				god.playerIndex=1;
 			}
 		}
 		else{
@@ -444,18 +475,21 @@ class ClientThread extends Thread
 				god.player2 = playerList[1];
 				god.hasleft = true;
 				god.player1 = playerList[2];
+				god.playerIndex = 0;
 			}
 			else if (playerList[1] == god.player) {
 				god.hasleft = true;
 				god.player1 = playerList[0];
 				god.hasRight = true;
 				god.player2 = playerList[2];
+				god.playerIndex = 1;
 			}
 			else{
 				god.hasleft = true;
-				god.player1 = playerList[2];
+				god.player1 = playerList[1];
 				god.hasRight = true;
-				god.player2 = playerList[1];
+				god.player2 = playerList[0];
+				god.playerIndex = 2;
 			}
 		}
 		god.showGame();
@@ -505,7 +539,7 @@ class ClientThread extends Thread
 	public void tablesStatus_rec(String clientMessage)
 	{
 		int roomCounter = 0;
-		int[] roomIndex, playerCounter;
+		int[] roomIndex, playerCounter = {};
 		String[] playerList;
 		int[] readyList;
 		//my stuff
@@ -537,6 +571,9 @@ class ClientThread extends Thread
 			}
 		}
 		// your turn
+		for(int j = 0; j < 20; j++)
+			god.deskNum[j] = playerCounter[j];
+		god.showSelectDesk();
 
 	}
 
