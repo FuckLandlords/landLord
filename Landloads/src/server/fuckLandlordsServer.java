@@ -85,8 +85,9 @@ class Game{
     {
         int cardDeckToBeShuffle[] = new int[54];
         for(int i=0;i<54;i++){
-            //cardIndex = value * 4 + color, so cardIndex should start from 4 (diamond 1)
-            cardDeckToBeShuffle[i] = i+4;
+            //cardIndex = value * 4 + color, so cardIndex should start from 5
+            //clowns are 57 and 58
+            cardDeckToBeShuffle[i] = i+5;
         }
         //shuffle cardDeck
         Random random = new Random();
@@ -746,7 +747,7 @@ class clientThread extends Thread{
             Room quitedRoom = quitRoomNoDout();
             if(quitedRoom!=null)
             {
-                String outputString = "quitRoom check " + generateTableStatusString(quitedRoom) + "\r\n";
+                String outputString = "quitRoom check " + me.userName + "\r\n";
                 quitedRoom.notifyJoin(outputString);
             }
 
