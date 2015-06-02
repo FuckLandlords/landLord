@@ -10,7 +10,6 @@ import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -85,6 +84,8 @@ public class client extends JApplet{
 	int landlord = 0;           //0 表示用户， 1表示左玩家，2表示右玩家  
 	
 	public ClientThread info;
+	
+	boolean isFirstEnterDesk = true;
 
 	public client() {
 		// TODO Auto-generated constructor
@@ -741,47 +742,69 @@ class ClientThread extends Thread
         	god.infoDialog("本桌已满，请选择其他桌子");
         }
         else{
-        	if(playerCounter == 1){
-    			god.hasleft = false;
-    			god.hasRight = false;
-    			god.playerIndex = 0;
-    		}
-    		else if(playerCounter == 2){
-    			if(playerList[0] == god.player){
-    				god.hasRight = true;
-    				god.player2 = playerList[1];
-    				god.playerIndex = 0;
-    			}
-    			else{
-    				god.hasleft = true;
-    				god.player1 = playerList[0];
-    				god.playerIndex=1;
-    			}
-    		}
-    		else{
-    			if(playerList[0] == god.player){
-    				god.hasRight = true;
-    				god.player2 = playerList[1];
-    				god.hasleft = true;
-    				god.player1 = playerList[2];
-    				god.playerIndex = 0;
-    			}
-    			else if (playerList[1] == god.player) {
-    				god.hasleft = true;
-    				god.player1 = playerList[0];
-    				god.hasRight = true;
-    				god.player2 = playerList[2];
-    				god.playerIndex = 1;
-    			}
-    			else{
-    				god.hasleft = true;
-    				god.player1 = playerList[1];
-    				god.hasRight = true;
-    				god.player2 = playerList[0];
-    				god.playerIndex = 2;
-    			}
-    		}
-    		god.showGame();
+        	if(god.isFirstEnterDesk == true){
+        		god.isFirstEnterDesk = false;
+		    	if(playerCounter == 1){
+					god.hasleft = false;
+					god.hasRight = false;
+					god.playerIndex = 0;
+				}
+				else if(playerCounter == 2){
+					if(playerList[0] == god.player){
+						god.hasRight = true;
+						god.player2 = playerList[1];
+						god.playerIndex = 0;
+					}
+					else{
+						god.hasleft = true;
+						god.player1 = playerList[0];
+						god.playerIndex=1;
+					}
+				}
+				else{
+					if(playerList[0] == god.player){
+						god.hasRight = true;
+						god.player2 = playerList[1];
+						god.hasleft = true;
+						god.player1 = playerList[2];
+						god.playerIndex = 0;
+					}
+					else if (playerList[1] == god.player) {
+						god.hasleft = true;
+						god.player1 = playerList[0];
+						god.hasRight = true;
+						god.player2 = playerList[2];
+						god.playerIndex = 1;
+					}
+					else{
+						god.hasleft = true;
+						god.player1 = playerList[1];
+						god.hasRight = true;
+						god.player2 = playerList[0];
+						god.playerIndex = 2;
+					}
+				}
+				god.showGame();
+        	}
+        	else{
+        		if(playerCounter == 2){
+        			god.hasRight = true;
+        			god.player2 = playerList[1];
+        			god.game.rightJoin();
+        		}
+        		else{
+        			if(god.hasleft == false){
+        				god.hasleft = true;
+        				god.player1 = playerList[2];
+        				god.game.leftJoin();
+        			}
+        			else {
+						god.hasRight = true;
+						god.player2 = playerList[2];
+						god.game.rightJoin();
+					}
+        		}
+        	}
 
         }
         
