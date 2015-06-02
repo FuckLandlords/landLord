@@ -10,11 +10,13 @@ import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
 import javax.swing.JApplet;
+
 import UI.BackgroundPanel;
 
 public class client extends JApplet{
@@ -551,7 +553,7 @@ class ClientThread extends Thread
 	public void tablesStatus_rec(String clientMessage)
 	{
 		int roomCounter = 0;
-		int[] roomIndex, playerCounter = {};
+		int[] roomIndex = null, playerCounter = {};
 		String[] playerList;
 		int[] readyList;
 		//my stuff
@@ -586,7 +588,10 @@ class ClientThread extends Thread
 		}
 		// your turn
 		for(int j = 0; j < 20; j++)
-			god.deskNum[j] = playerCounter[j];
+			god.deskNum[j] = 0;
+		for(int j = 0; j < roomCounter; j++){
+			god.deskNum[roomIndex[j]-1] = playerCounter[j];
+		}
 		god.showSelectDesk();
 
 	}
