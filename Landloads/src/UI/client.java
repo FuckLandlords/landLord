@@ -826,7 +826,7 @@ class ClientThread extends Thread
     public void quitRoom_rec(String clientMessage)
     {
         boolean successOrNot;
-        String quitterName;
+        String quitterName = null;
         //my stuff
         int startElementIndex = clientMessage.indexOf(' ') + 1;
         int endElementIndex = clientMessage.indexOf(' ', startElementIndex);
@@ -844,6 +844,18 @@ class ClientThread extends Thread
             quitterName = clientMessage.substring(startElementIndex, endElementIndex);
         }
         //your turn
+        if(successOrNot == false){
+        	return;
+        }
+        if(quitterName == god.player){
+        	god.showSelectDesk();
+        }
+        else if (quitterName == god.player1) {
+			god.game.leftQuit();
+		}
+        else {
+			god.game.rightQuit();
+		}
     }
    
 
