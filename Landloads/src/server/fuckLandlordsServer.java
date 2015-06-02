@@ -1,5 +1,5 @@
 /**
- * Created by ï¿½ï¿½ï¿½ï¿½ on 5/22/2015.
+ * Created by äÈÒã on 5/22/2015.
  */
 package server;
 import javax.lang.model.type.ArrayType;
@@ -703,13 +703,16 @@ class clientThread extends Thread{
                         return 0;
                     }
                     else{
-                        dout.write(("joinUser fail\r\n").getBytes("UTF-8"));
+                        dout.write(("joinRoom fail\r\n").getBytes("UTF-8"));
                         return 1;
                     }
                 }
             }
-            dout.write(("joinUser fail\r\n").getBytes("UTF-8"));
-            return 2;
+            // room is empty
+            targetRoom = openNewRoomNoDout();
+            String outputString = "joinRoom check " + generateTableStatusString(targetRoom) + "\r\n";
+            dout.write(outputString.getBytes("UTF-8"));
+            return 0;
         } catch (Exception ex){
             System.out.println("Exception in joinRoom(String clientMessage)");
             return -1;
