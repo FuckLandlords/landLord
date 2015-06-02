@@ -1,7 +1,6 @@
 /**
- * Created by ï¿½ï¿½ï¿½ï¿½ on 5/22/2015.
+ * Created by äÈÒã on 5/22/2015.
  */
-package server;
 import javax.lang.model.type.ArrayType;
 import java.lang.reflect.Array;
 import java.net.*;
@@ -24,7 +23,7 @@ class Room{
     public void notifyTableStatus()
     {
         for(int i=0;i<users.size();i++){
-            users.get(i).tablesStatus();
+            users.get(i).tableStatus();
         }
     }
     public void notifyReadyStatus(){
@@ -809,7 +808,7 @@ class clientThread extends Thread{
     public int readyStatus()
     {
         try{
-            String readyStatusString = "readyStatus";
+            String readyStatusString = "readyStatus " + me.theRoom.users.size();
             Room myRoom = me.theRoom;
             for(int searchIndex = 0; searchIndex<myRoom.users.size(); searchIndex++){
                 readyStatusString += " " + myRoom.users.get(searchIndex).me.ready;
