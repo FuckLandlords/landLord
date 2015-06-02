@@ -1,7 +1,7 @@
 /**
  * Created by äÈÒã on 5/22/2015.
  */
-
+package server;
 import javax.lang.model.type.ArrayType;
 import java.lang.reflect.Array;
 import java.net.*;
@@ -270,7 +270,7 @@ class Game{
         ArrayList<Card> playersCards = cardDecks.get(whosTurn).cards;
         int originalSize = biggestCards.size();
         while (true) {
-            cardStartIndex = cardEndIndex;
+            cardStartIndex = cardEndIndex + 1;
             cardEndIndex = cardList.indexOf(' ', cardStartIndex);
             if(cardEndIndex == -1)
                 break;
@@ -282,7 +282,7 @@ class Game{
             }
             biggestCards.add(playersCards.remove(cardIndex));
         }
-        card.value = Integer.parseInt(cardList.substring(cardStartIndex, cardList.length()-2));
+        card.value = Integer.parseInt(cardList.substring(cardStartIndex, cardList.length()));
         if(card.value!=-1) {
             for (cardIndex = playersCards.size() - 1; cardIndex >= 0; cardIndex--) {
                 if (playersCards.get(cardIndex).value == card.value)
