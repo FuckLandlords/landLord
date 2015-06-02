@@ -1,11 +1,9 @@
 /**
- * Created by äÈÒã on 5/22/2015.
+ * Created by ï¿½ï¿½ï¿½ï¿½ on 5/22/2015.
  */
-import javax.lang.model.type.ArrayType;
-import java.lang.reflect.Array;
+package server;
 import java.net.*;
 import java.io.*;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 class User{
@@ -551,26 +549,43 @@ class clientThread extends Thread{
                 {
                     if(roomArray.get(searchIndex).users.size()<3){
                         me.theRoom = roomArray.get(searchIndex);
-                        me.theRoom.users.add(this);
+//<<<<<<< Updated upstream
+                       me.theRoom.users.add(this);
+//=======
+  //                     me.theRoom.users.add(me);
+//>>>>>>> Stashed changes
                         break;
                     }
                 }
                 if(searchIndex == partition){
                     if(roomArray.get(searchIndex).users.size()<3){
+//<<<<<<< Updated upstream
                         roomArray.get(searchIndex).users.add(this);
+//=======
+ //                       roomArray.get(searchIndex).users.add(me);
+//>>>>>>> Stashed changes
                         me.theRoom = roomArray.get(searchIndex);
                     }
                     else{
                         openNewRoomNoDout();
                     }
                 }
+//<<<<<<< Updated upstream
+ //           }
+//=======
             }
+            System.out.println("gaga");
+//>>>>>>> Stashed changes
             String tableStatusString = "startMatching " + generateTableStatusString(me.theRoom) + "\r\n";
             dout.write(tableStatusString.getBytes("UTF-8"));
             me.theRoom.notifyTableStatus();
 
         }
         catch (Exception ex){
+//<<<<<<< Updated upstream
+//=======
+            System.out.println(ex);
+//>>>>>>> Stashed changes
             System.out.println("Exception in startMatching()");
             return -1;
         }
@@ -611,6 +626,7 @@ class clientThread extends Thread{
             newRoom.roomNumber = 1;
         else
             newRoom.roomNumber = roomArray.get(roomArray.size()).roomNumber + 1;
+
         roomArray.add(newRoom);
         me.theRoom = newRoom;
         return newRoom;

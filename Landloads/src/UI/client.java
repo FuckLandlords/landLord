@@ -390,7 +390,7 @@ class ClientThread extends Thread
 	{
 		try{
 			//your turn
-			String userName = "";
+			String userName = god.player;
 			//my stuff
 			String toSend;
 			toSend = "startMatching " + userName + "\r\n";
@@ -424,6 +424,42 @@ class ClientThread extends Thread
 			readyList[i] = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
 		}
 		//your turn
+		if(playerCounter == 1){
+			god.hasleft = false;
+			god.hasRight = false;
+		}
+		else if(playerCounter == 2){
+			if(playerList[0] == god.player){
+				god.hasRight = true;
+				god.player2 = playerList[1];
+			}
+			else{
+				god.hasleft = true;
+				god.player1 = playerList[0];
+			}
+		}
+		else{
+			if(playerList[0] == god.player){
+				god.hasRight = true;
+				god.player2 = playerList[1];
+				god.hasleft = true;
+				god.player1 = playerList[2];
+			}
+			else if (playerList[1] == god.player) {
+				god.hasleft = true;
+				god.player1 = playerList[0];
+				god.hasRight = true;
+				god.player2 = playerList[2];
+			}
+			else{
+				god.hasleft = true;
+				god.player1 = playerList[2];
+				god.hasRight = true;
+				god.player2 = playerList[1];
+			}
+		}
+		god.showGame();
+		
 
 	}
 

@@ -211,7 +211,7 @@ public class SelectDesk extends JPanel{
 	class Click_Start implements MouseListener{
 
 		public void mouseClicked(MouseEvent e) {
-			
+			p.info.startMatching_send();
 		}
 		public void mousePressed(MouseEvent e) {}
 		public void mouseReleased(MouseEvent e) {}
