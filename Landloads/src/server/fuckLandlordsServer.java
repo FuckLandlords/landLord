@@ -1,7 +1,7 @@
 /**
  * Created by äÈÒã on 5/22/2015.
  */
-package server;
+
 import javax.lang.model.type.ArrayType;
 import java.lang.reflect.Array;
 import java.net.*;
@@ -781,8 +781,8 @@ class clientThread extends Thread{
     {
         try{
             getMEReady();
-            dout.write(("ready check\r\n").getBytes("UTF-8"));
-            me.theRoom.notifyReadyStatus();
+            String readyString = "ready " + me.userName + "\r\n";
+            me.theRoom.notifyJoin(readyString);
             if(me.theRoom.state == 3) {
                 me.theRoom.allReadyLock = 1;
                 //start the game

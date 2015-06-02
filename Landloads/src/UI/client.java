@@ -873,16 +873,13 @@ class ClientThread extends Thread
 
     public void ready_rec(String clientMessage)
     {
-        boolean successOrNot;
+        String userName = null;
         //my stuff
         int startElementIndex = clientMessage.indexOf(' ') + 1;
         int endElementIndex = clientMessage.indexOf(' ', startElementIndex);
         if(endElementIndex == -1)
             endElementIndex = clientMessage.length();
-        if(clientMessage.substring(startElementIndex, endElementIndex).startsWith("c"))
-            successOrNot = true;
-        else
-            successOrNot = false;
+        userName = clientMessage.substring(startElementIndex, endElementIndex);
         //your turn
     }
 
