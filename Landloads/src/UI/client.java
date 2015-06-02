@@ -540,7 +540,7 @@ class ClientThread extends Thread
 	{
 		try{
 			//your turn
-			String userName = "";
+			String userName = god.player;
 			//my stuff
 			String toSend = "tablesStatus " + userName + "\r\n";
 			dout.write(toSend.getBytes("UTF-8"));
