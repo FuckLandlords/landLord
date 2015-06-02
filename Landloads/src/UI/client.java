@@ -847,10 +847,10 @@ class ClientThread extends Thread
         if(successOrNot == false){
         	return;
         }
-        if(quitterName == god.player){
+        if(quitterName.equals(god.player)){
         	god.showSelectDesk();
         }
-        else if (quitterName == god.player1) {
+        else if (quitterName.equals(god.player1)) {
 			god.game.leftQuit();
 		}
         else {
