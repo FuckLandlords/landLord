@@ -332,7 +332,7 @@ class ClientThread extends Thread
                 } else if(choice.startsWith("startMatching")){
                     startMatching_rec(choice);
                 } else if(choice.startsWith("tableStatus")){
-                    tablesStatus_rec(choice);
+                    tableStatus_rec(choice);
                 } else if(choice.startsWith("openNewRoom")){
                     openNewRoom_rec(choice);
                 } else if(choice.startsWith("tablesStatus")){
