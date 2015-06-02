@@ -719,6 +719,8 @@ class ClientThread extends Thread
         else
             successOrNot = false;
         if(successOrNot) {
+        	startElementIndex = endElementIndex + 1;
+            endElementIndex = clientMessage.indexOf(' ', startElementIndex);
             roomIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
             startElementIndex = endElementIndex + 1;
             endElementIndex = clientMessage.indexOf(' ', startElementIndex);
