@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 import javax.swing.JApplet;
+import javax.swing.JOptionPane;
 
 import UI.BackgroundPanel;
 
@@ -251,6 +252,7 @@ public class client extends JApplet{
 		game.setVisible(false);
 		bgp.setVisible(true);
 		//selectDesk
+		selectDesk.initDesk();
 		selectDesk.setVisible(true);
 	}
 	public void showGame() {
@@ -263,6 +265,13 @@ public class client extends JApplet{
 		game.initPlayer();
 		game.setVisible(true);
 	}
+	 public void infoDialog(String mesg)  
+	    {  
+	        JOptionPane.showMessageDialog(null,  
+	            "<html><font color=\"green\"  style=\"font-weight:bold;\" >" + mesg  
+	                + "</font></html>", "消息",  
+	            JOptionPane.INFORMATION_MESSAGE);  
+	    }  
 	public static void main(String[] args) {
 		int width = 960;
 		int height = 640;
@@ -726,6 +735,54 @@ class ClientThread extends Thread
             }
         }
         //your turn
+        if(successOrNot == false){
+        	god.infoDialog("本桌已满，请选择其他桌子");
+        }
+        else{
+        	if(playerCounter == 1){
+    			god.hasleft = false;
+    			god.hasRight = false;
+    			god.playerIndex = 0;
+    		}
+    		else if(playerCounter == 2){
+    			if(playerList[0] == god.player){
+    				god.hasRight = true;
+    				god.player2 = playerList[1];
+    				god.playerIndex = 0;
+    			}
+    			else{
+    				god.hasleft = true;
+    				god.player1 = playerList[0];
+    				god.playerIndex=1;
+    			}
+    		}
+    		else{
+    			if(playerList[0] == god.player){
+    				god.hasRight = true;
+    				god.player2 = playerList[1];
+    				god.hasleft = true;
+    				god.player1 = playerList[2];
+    				god.playerIndex = 0;
+    			}
+    			else if (playerList[1] == god.player) {
+    				god.hasleft = true;
+    				god.player1 = playerList[0];
+    				god.hasRight = true;
+    				god.player2 = playerList[2];
+    				god.playerIndex = 1;
+    			}
+    			else{
+    				god.hasleft = true;
+    				god.player1 = playerList[1];
+    				god.hasRight = true;
+    				god.player2 = playerList[0];
+    				god.playerIndex = 2;
+    			}
+    		}
+    		god.showGame();
+
+        }
+        
     }
 
     public void quitRoom_send(String userName, int roomIndex)

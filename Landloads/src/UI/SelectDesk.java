@@ -202,7 +202,8 @@ public class SelectDesk extends JPanel{
 			this.num = num;
 		}
 		public void mouseClicked(MouseEvent e) {
-			p.showGame();
+			//p.showGame();
+			p.info.joinRoom_send(num, p.player);
 		}
 		public void mousePressed(MouseEvent e) {}
 		public void mouseReleased(MouseEvent e) {}
