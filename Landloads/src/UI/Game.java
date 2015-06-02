@@ -20,7 +20,7 @@ public class Game extends JPanel{
 	
 	//一些常量 
 	static int SMOKE = 1;
-	static int TIMER_NUM = 6;
+	static int TIMER_NUM = 8;
 	static int USER = 0;
 	static int LEFT_USER = 1;
 	static int RIGHT_USER = 2;
@@ -274,6 +274,14 @@ public class Game extends JPanel{
 		getSmoke(4);
 		getSmoke(5);
 	}
+	
+	public void leftQuit() {
+		getSmoke(7);
+	}
+	
+	public void rightQuit() {
+		getSmoke(8);
+	}
 	/*
 	 * num = 1 表示左边玩家进桌
 	 * num = 2 表示右边玩家进桌
@@ -306,7 +314,17 @@ public class Game extends JPanel{
 		else if(num == 6){
 			animationTimer[5] = new Timer(100, new StartAnimationTimerListener(SMOKE, num));
 			animationTimer[5].start();
+		}//左玩家退出
+		else if(num == 7){
+			animationTimer[6] = new Timer(100, new StartAnimationTimerListener(SMOKE, num));
+			animationTimer[6].start();
+		}//右玩家退出
+		else if(num == 8){
+			animationTimer[7] = new Timer(100, new StartAnimationTimerListener(SMOKE, num));
+			animationTimer[7].start();
 		}
+
+
 
 		
 	}
@@ -1043,6 +1061,18 @@ public class Game extends JPanel{
 	}
 	
 	/*
+	 * 玩家退出房间时头像消失
+	 * num = 1 表示左玩家
+	 * num = 2 表示右玩家
+	 */
+	public void changeHeadForQuit(int num){
+		remove(headPicture[num]);
+		headPicture[num] = new HeadPicture(image_transparent, image_transparent);
+		add(headPicture[num]);
+		headPicture[num].setOpaque(false);
+		repaint();
+	}
+	/*
 	 *  num = 1 表示左玩家准备好
 	 *  num = 2 表示右玩家准备好
 	 */
@@ -1173,14 +1203,8 @@ public class Game extends JPanel{
 	class Click_Return implements MouseListener{
 
 		public void mouseClicked(MouseEvent e) {
-			setLandlord(0);
-			Card[] a = new Card[13];
-			for(int j = 0; j < 13;j ++){
-				a[j] = new Card(1, j+1);
-			}
-			//getRightPoker(a);
-			//restart();
-			
+			p.info.quitRoom_send(p.player, p.roomIndex);
+						
 		}
 		public void mousePressed(MouseEvent e) {}
 		public void mouseReleased(MouseEvent e) {}
@@ -1421,6 +1445,36 @@ public class Game extends JPanel{
 						add(headPicture[j]);
 					}
 					repaint();
+				}
+				count++;
+
+			}
+			else if (type == SMOKE && num == 7) {
+				if(count >= 6){
+					animationTimer[6].stop();
+					count = 0;
+					changeHeadForQuit(1);
+				}
+				else {
+						remove(headPicture[1]);
+						headPicture[1] = new HeadPicture(image_smoke[count], null);
+						add(headPicture[1]);
+						repaint();
+				}
+				count++;
+
+			}
+			else if (type == SMOKE && num == 8) {
+				if(count >= 6){
+					animationTimer[7].stop();
+					count = 0;
+					changeHeadForQuit(2);
+				}
+				else {
+						remove(headPicture[2]);
+						headPicture[2] = new HeadPicture(image_smoke[count], null);
+						add(headPicture[2]);
+						repaint();
 				}
 				count++;
 

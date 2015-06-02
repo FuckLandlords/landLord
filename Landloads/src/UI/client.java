@@ -70,6 +70,7 @@ public class client extends JApplet{
 	String player1 = "";		//宸﹁竟鐜╁鍚嶇О锛岃幏鍙�
 	String player2 = "";		//鍙宠竟鐜╁鍚嶇О锛岃幏鍙�
 	int playerIndex = 0;
+	int roomIndex;
 
 	
 	int[]  headNum = {17,16,18};                 //用户玩家头像
@@ -742,6 +743,7 @@ class ClientThread extends Thread
         	god.infoDialog("本桌已满，请选择其他桌子");
         }
         else{
+        	god.roomIndex = roomIndex;
         	if(god.isFirstEnterDesk == true){
         		god.isFirstEnterDesk = false;
 		    	if(playerCounter == 1){
@@ -854,7 +856,7 @@ class ClientThread extends Thread
         }
         //your turn
     }
-    }
+   
 
     public void ready_send()
     {
