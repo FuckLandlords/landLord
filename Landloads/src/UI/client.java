@@ -823,8 +823,6 @@ class ClientThread extends Thread
 
     public void quitRoom_rec(String clientMessage)
     {
-        public void quitRoom_rec(String clientMessage)
-    {
         boolean successOrNot;
         int roomIndex = -1, playerCounter = 0;
         String[] playerList = new String[3];
