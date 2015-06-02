@@ -571,9 +571,8 @@ class clientThread extends Thread{
                     }
                 }
             }
-            String tableStatusString = "startMatching " + generateTableStatusString(me.theRoom) + "\r\n";
-            dout.write(tableStatusString.getBytes("UTF-8"));
-            me.theRoom.notifyTableStatus();
+            String tableStatusString = "joinRoom check " + generateTableStatusString(me.theRoom) + "\r\n";
+            me.theRoom.notifyJoin(tableStatusString);
 
         }
         catch (Exception ex){
