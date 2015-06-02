@@ -420,7 +420,7 @@ class ClientThread extends Thread
 			startElementIndex = endElementIndex + 1;
 			endElementIndex = clientMessage.indexOf(' ', startElementIndex);
 			if(endElementIndex == -1)
-				endElementIndex = clientMessage.length()-2;
+				endElementIndex = clientMessage.length();
 			readyList[i] = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
 		}
 		//your turn
@@ -459,7 +459,6 @@ class ClientThread extends Thread
 			}
 		}
 		god.showGame();
-		
 
 	}
 
@@ -483,7 +482,7 @@ class ClientThread extends Thread
 		int newRoomIndex = -1;
 		//my stuff
 		int startElementIndex = clientMessage.indexOf(' ') + 1;
-		int endElementIndex = clientMessage.length() - 2;
+		int endElementIndex = clientMessage.length();
 		newRoomIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
 		//your turn
 
@@ -532,7 +531,7 @@ class ClientThread extends Thread
 					startElementIndex = endElementIndex + 1;
 					endElementIndex = clientMessage.indexOf(' ', startElementIndex);
 					if (endElementIndex == -1)
-						endElementIndex = clientMessage.length() - 2;
+						endElementIndex = clientMessage.length();
 					readyList[i * 3 + j] = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
 				}
 			}
@@ -566,7 +565,7 @@ class ClientThread extends Thread
 		int startElementIndex = clientMessage.indexOf(' ') + 1;
 		int endElementIndex = clientMessage.indexOf(' ', startElementIndex);
 		if(endElementIndex == -1)
-			endElementIndex = clientMessage.length() - 2;
+			endElementIndex = clientMessage.length();
 		if(clientMessage.substring(startElementIndex, endElementIndex).startsWith("c"))
 			successOrNot = true;
 		else
@@ -583,7 +582,7 @@ class ClientThread extends Thread
 				startElementIndex = endElementIndex + 1;
 				endElementIndex = clientMessage.indexOf(' ', startElementIndex);
 				if (endElementIndex == -1)
-					endElementIndex = clientMessage.length() - 2;
+					endElementIndex = clientMessage.length();
 				readyList[i] = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
 			}
 		}
@@ -622,7 +621,7 @@ class ClientThread extends Thread
 			startElementIndex = endElementIndex + 1;
 			endElementIndex = clientMessage.indexOf(' ', startElementIndex);
 			if(endElementIndex == -1)
-				endElementIndex = clientMessage.length()-2;
+				endElementIndex = clientMessage.length();
 			readyList[i] = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
 		}
 		//your turn
