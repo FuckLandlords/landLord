@@ -1,7 +1,7 @@
 /**
  * Created by äÈÒã on 5/22/2015.
  */
-package server;
+
 import javax.lang.model.type.ArrayType;
 import java.lang.reflect.Array;
 import java.net.*;
@@ -30,6 +30,11 @@ class Room{
     public void notifyReadyStatus(){
         for(int i=0; i<users.size();i++){
             users.get(i).readyStatus();
+        }
+    }
+    public void notifyJoin(String outputString){
+        for(int i=0;i<users.size();i++){
+            users.get(i).joinOrQuitBroadcast(outputString);
         }
     }
 }
@@ -699,7 +704,7 @@ class clientThread extends Thread{
                     if(joinRoomNoDout(targetRoom) == 0){
                         String outputString = "joinRoom check " + generateTableStatusString(me.theRoom) + "\r\n";
                         dout.write(outputString.getBytes("UTF-8"));
-                        me.theRoom.notifyTableStatus();
+                        me.theRoom.notifyJoin(outputString);
                         return 0;
                     }
                     else{
@@ -742,8 +747,10 @@ class clientThread extends Thread{
         try{
             Room quitedRoom = quitRoomNoDout();
             if(quitedRoom!=null)
-                quitedRoom.notifyTableStatus();
-            dout.write(("quitRoom check\r\n").getBytes("UTF-8"));
+            {
+                String outputString = "quitRoom check " + generateTableStatusString(quitedRoom) + "\r\n";
+                quitedRoom.notifyJoin(outputString);
+            }
 
         } catch (Exception ex){
             System.out.println("Exception in quitRoom()");
@@ -1073,6 +1080,17 @@ class clientThread extends Thread{
             dout.write(broadcastString.getBytes("UTF-8"));
         } catch(Exception ex){
             System.out.println("Exception in cardOutReply(String broadcastString");
+            return -1;
+        }
+        return 0;
+    }
+
+    public int joinOrQuitBroadcast(String broadcastString)
+    {
+        try{
+            dout.write(broadcastString.getBytes("UTF-8"));
+        } catch (Exception ex){
+            System.out.println("Exception in joinOrQuitBroadcast(String broadcastString)");
             return -1;
         }
         return 0;

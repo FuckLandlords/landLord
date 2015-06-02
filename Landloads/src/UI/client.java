@@ -800,7 +800,12 @@ class ClientThread extends Thread
 
     public void quitRoom_rec(String clientMessage)
     {
+        public void quitRoom_rec(String clientMessage)
+    {
         boolean successOrNot;
+        int roomIndex = -1, playerCounter = 0;
+        String[] playerList = new String[3];
+        int[] readyList = new int[3];
         //my stuff
         int startElementIndex = clientMessage.indexOf(' ') + 1;
         int endElementIndex = clientMessage.indexOf(' ', startElementIndex);
@@ -810,7 +815,24 @@ class ClientThread extends Thread
             successOrNot = true;
         else
             successOrNot = false;
+        if(successOrNot) {
+            roomIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+            startElementIndex = endElementIndex + 1;
+            endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+            playerCounter = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+            for (int i = 0; i < playerCounter; i++) {
+                startElementIndex = endElementIndex + 1;
+                endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+                playerList[i] = clientMessage.substring(startElementIndex, endElementIndex);
+                startElementIndex = endElementIndex + 1;
+                endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+                if (endElementIndex == -1)
+                    endElementIndex = clientMessage.length();
+                readyList[i] = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+            }
+        }
         //your turn
+    }
     }
 
     public void ready_send()
