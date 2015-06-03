@@ -1511,13 +1511,14 @@ public class Game extends JPanel{
 				//不叫地主
 				callbuttonJpanel.setVisible(false);
 				notcallbuttonJpanel.setVisible(false);
-				notOutOrCallLandlord(1, 0);
-				
+				//notOutOrCallLandlord(1, 0);
+				p.info.landLordCall_send(p.playerIndex, "no");
 			}
 			else if(type == 1){
 				callbuttonJpanel.setVisible(false);
 				notcallbuttonJpanel.setVisible(false);
-				notOutOrCallLandlord(2, 0);
+				//notOutOrCallLandlord(2, 0);
+				p.info.landLordCall_send(p.playerIndex, "yes");
 			}
 			else if(type == 2){
 				outbuttonJpanel.setVisible(false);

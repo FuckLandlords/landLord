@@ -149,7 +149,7 @@ class Game{
         if(agreeOrNot == 1)
             broadcastString += " yes\r\n";
         else
-            broadcastString += "no\r\n";
+            broadcastString += " no\r\n";
         for(int i=0;i<3;i++)
             players.get(i).landLordCallBroadcast(broadcastString);
 

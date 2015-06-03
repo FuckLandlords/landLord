@@ -1100,6 +1100,8 @@ class ClientThread extends Thread
         userIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
         //your turn
         god.game.startTimer(god.getIndex(userIndex), 0);
+        if(userIndex == god.playerIndex)
+        	god.game.userCallOrOut(0);
     }
 
     public void landLordCall_send(int userIndex, String answer)//your answer to landlord call, should be yes or no
@@ -1130,6 +1132,11 @@ class ClientThread extends Thread
         else
             agreeOrNot = false;
         //your turn
+        if(agreeOrNot)
+        	god.game.notOutOrCallLandlord(1, god.getIndex(userIndex));
+        else{
+        	god.game.notOutOrCallLandlord(0, god.getIndex(userIndex));
+        }
     }
 
     //there is no need for landLordIs_send
