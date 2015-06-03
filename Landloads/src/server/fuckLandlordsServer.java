@@ -1,5 +1,5 @@
 /**
- * Created by ï¿½ï¿½ï¿½ï¿½ on 5/22/2015.
+ * Created by äÈÒã on 5/22/2015.
  */
 package server;
 import javax.lang.model.type.ArrayType;
@@ -14,6 +14,7 @@ class User{
     Room theRoom;
     int ready;
 }
+
 class Room{
     int roomNumber;
     ArrayList<clientThread> users;
@@ -27,17 +28,54 @@ class Room{
             users.get(i).tableStatus();
         }
     }
-    public void notifyReadyStatus(){
+    public void notifyReadyStatus()
+    {
         for(int i=0; i<users.size();i++){
             users.get(i).readyStatus();
         }
     }
-    public void notifyJoin(String outputString){
+    public void notifyJoin(String outputString)
+    {
         for(int i=0;i<users.size();i++){
             users.get(i).joinOrQuitBroadcast(outputString);
         }
     }
 }
+
+class timerTask1 extends TimerTask {
+    Game theGame;
+    timerTask1(Game game)
+    {
+        theGame = game;
+    }
+    public void run() {
+        theGame.XTimeOut();
+        theGame.toBeLoggedOut.add(theGame.players.get(theGame.whosTurn));
+        if (theGame.bigPlayer == theGame.players.get(theGame.whosTurn).me) {
+            theGame.cardOut_machinePlay(theGame.cardDecks.get(theGame.whosTurn).cards.get(0).value + "", theGame.players.get(theGame.whosTurn).me.userName);
+        } else {
+            theGame.cardOut_machinePlay(-1 + "", theGame.players.get(theGame.whosTurn).me.userName);
+        }
+        if (theGame.toBeLoggedOut.size() == 3) {
+            theGame.gameOver(-1);
+        }
+    }
+}
+
+class timerTask2 extends TimerTask {
+    Game theGame;
+    timerTask2(Game game)
+    {
+        theGame = game;
+    }
+    public void run() {
+        String XTimeString = "XTime " + theGame.whosTurn + " 10\r\n";
+        for (int i = 0; i < 3; i++) {
+            theGame.players.get(i).XTime(XTimeString);
+        }
+    }
+}
+
 class Game{
     ArrayList<clientThread> players;
     ArrayList<clientThread> toBeLoggedOut;
@@ -77,6 +115,8 @@ class Game{
             }
             unfoldedCards = new ArrayList<>();
             biggestCards = new ArrayList<>();
+            timer = new Timer();
+            timer2 = new Timer();
             gameStartPreparation();
         } catch (Exception ex){
             System.out.println(ex);
@@ -137,7 +177,8 @@ class Game{
     public void landLordInvitation()
     {
         String broadcastString = "landLord " + whosTurn%3 + "\r\n";
-        for(int i=0;i<3;i++){
+        int playerSize = players.size();
+        for(int i=0;i<playerSize;i++){
             players.get(i).landLord(broadcastString);
         }
     }
@@ -145,24 +186,36 @@ class Game{
     public void landLordRegistration(int agreeOrNot)
     {
         landLordSubmissionTable[whosTurn%3] = agreeOrNot;
-        String broadcastString = "landLordCall " + whosTurn;
+        String broadcastString = "landLordCall " + whosTurn%3;
         if(agreeOrNot == 1)
             broadcastString += " yes\r\n";
         else
             broadcastString += " no\r\n";
-        for(int i=0;i<3;i++)
+        int playerSize = players.size();
+        for(int i=0;i<playerSize;i++) {
             players.get(i).landLordCallBroadcast(broadcastString);
+        }
 
         whosTurn++;
+        turnName = players.get(whosTurn%3).me.userName;
         if(whosTurn<3){
             landLordInvitation();
         }
         else if(whosTurn == 3) {
             if (landLordSubmissionTable[0] == 1) {
-                landLordInvitation();
+                for(int i=1;i<3;i++){
+                    if(landLordSubmissionTable[i] == 1){
+                        landLordInvitation();
+                        return;
+                    }
+                }
+                landLordAscendingCeremony(0);
+                whosTurn = 0;
+                turnName = players.get(0).me.userName;
+                XTurn();
                 return;
             } else {
-                for(int i=1;i>=0;i--){
+                for(int i=2;i>0;i--){
                     if(landLordSubmissionTable[i]==1) {
                         landLordAscendingCeremony(i);
                         whosTurn = i;
@@ -186,7 +239,7 @@ class Game{
                 XTurn();
                 return;
             } else{
-                for(int i=1;i>=0;i--){
+                for(int i=2;i>0;i--){
                     if(landLordSubmissionTable[i]==1) {
                         landLordAscendingCeremony(i);
                         whosTurn = i;
@@ -203,7 +256,6 @@ class Game{
                 return;
             }
         }
-
     }
 
     public void landLordAscendingCeremony(int landLordIndex)
@@ -214,62 +266,71 @@ class Game{
             landLordsCards.cards.add(unfoldedCards.get(i));
         }
         String landLordIsString = "landLordIs " + landLordIndex + "\r\n";
-        for(int j=0;j<3;j++)
+        int playerSize = players.size();
+        for(int j=0;j<playerSize;j++)
             players.get(j).landLordIs(landLordIsString);
     }
 
     public void XTimeOut()
     {
-        String timeOutString = "XTimeOut" + whosTurn;
-        for(int i=0;i<3;i++){
+        String timeOutString = "XTimeOut " + whosTurn + "\r\n";
+        int playerSize = players.size();
+        for(int i=0;i<playerSize;i++){
             players.get(i).XTimeOut(timeOutString);
         }
     }
 
     public void XTurn()
     {
-        String broadcastString = "XTurn " + whosTurn + "\r\n";
-        for(int i=0;i<3;i++){
-            players.get(i).XTurn(broadcastString);
+        try {
+            String broadcastString = "XTurn " + whosTurn + "\r\n";
+            int playerSize = players.size();
+            for (int i = 0; i < playerSize; i++) {
+                players.get(i).XTurn(broadcastString);
+            }
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    XTimeOut();
+                    toBeLoggedOut.add(players.get(whosTurn));
+                    if (biggestCards.size() == 0) {
+                        cardOut_machinePlay(cardDecks.get(whosTurn).cards.get(0).value + "", players.get(whosTurn).me.userName);
+                    } else {
+                        cardOut_machinePlay(-1 + "", players.get(whosTurn).me.userName);
+                    }
+                    if (toBeLoggedOut.size() == 3) {
+                        gameOver(-1);
+                        timer.cancel();
+                        timer2.cancel();
+                    }
+                }
+            }, 25000);
+            //timer.schedule(new timerTask1(this), 25000);
+            timer2.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    String XTimeString = "XTime " + whosTurn + " 10\r\n";
+                    int playerSize = players.size();
+                    for (int i = 0; i < playerSize; i++) {
+                        players.get(i).XTime(XTimeString);
+                    }
+                }
+            }, 12000);
+            //timer2.schedule(new timerTask2(this), 12000);
+        }catch (Exception ex){
+            System.out.println(ex);
+            System.out.println("Exception here");
         }
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                XTimeOut();
-                toBeLoggedOut.add(players.get(whosTurn));
-                if(biggestCards.size() == 0) {
-                    cardOut(cardDecks.get(whosTurn).cards.get(0).value + "\r\n", players.get(whosTurn).me.userName);
-                }
-                else{
-                    cardOut(-1 + "\r\n", players.get(whosTurn).me.userName);
-                }
-                if(toBeLoggedOut.size()==3){
-                    gameOver(-1);
-                }
-            }
-        }, 0, 25000);
-        timer2.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                String XTimeString = "XTime " + whosTurn + "10\r\n";
-                for(int i=0;i<3;i++){
-                    players.get(i).XTime(XTimeString);
-                }
-            }
-        }, 0, 12000);
     }
 
-    public void cardOut(String cardList, String userName)
+    public void cardOut_machinePlay(String cardList, String userName)
     {
         if(!players.get(whosTurn).me.userName.equals(userName))
             return;
         //verify card list
 
-        timer.cancel();
-        timer2.cancel();
-
         Card card = new Card();
-        int cardEndIndex = 0, cardStartIndex = 0, cardIndex;
+        int cardEndIndex = -1, cardStartIndex = 0, cardIndex, cardCounter = 0;
         ArrayList<Card> playersCards = cardDecks.get(whosTurn).cards;
         int originalSize = biggestCards.size();
         while (true) {
@@ -278,12 +339,12 @@ class Game{
             if(cardEndIndex == -1)
                 break;
             card.value = Integer.parseInt(cardList.substring(cardStartIndex, cardEndIndex));
-            cardEndIndex++;//jump through the space between cards
             for(cardIndex=playersCards.size()-1;cardIndex>=0;cardIndex--) {
                 if (playersCards.get(cardIndex).value == card.value)
                     break;
             }
             biggestCards.add(playersCards.remove(cardIndex));
+            cardCounter++;
         }
         card.value = Integer.parseInt(cardList.substring(cardStartIndex, cardList.length()));
         if(card.value!=-1) {
@@ -297,8 +358,59 @@ class Game{
             for (int i = 0; i < originalSize; i++)
                 biggestCards.remove(0);
         }
+        cardCounter++;
 
-        cardOutReply(cardList);
+        cardOutReply(cardList, cardCounter);
+        //cardInfo();
+
+        if(playersCards.size() == 0)
+            gameOver(whosTurn);
+
+        whosTurn++;
+        whosTurn%=3;
+        turnName = players.get(whosTurn).me.userName;
+        XTurn();
+
+    }
+
+    public void cardOut(String cardList, String userName)
+    {
+        if(!players.get(whosTurn).me.userName.equals(userName))
+            return;
+        //verify card list
+
+        Card card = new Card();
+        int cardEndIndex = -1, cardStartIndex = 0, cardIndex, cardCounter = 0;
+        ArrayList<Card> playersCards = cardDecks.get(whosTurn).cards;
+        int originalSize = biggestCards.size();
+        while (true) {
+            cardStartIndex = cardEndIndex + 1;
+            cardEndIndex = cardList.indexOf(' ', cardStartIndex);
+            if(cardEndIndex == -1)
+                break;
+            card.value = Integer.parseInt(cardList.substring(cardStartIndex, cardEndIndex));
+            for(cardIndex=playersCards.size()-1;cardIndex>=0;cardIndex--) {
+                if (playersCards.get(cardIndex).value == card.value)
+                    break;
+            }
+            biggestCards.add(playersCards.remove(cardIndex));
+            cardCounter++;
+        }
+        card.value = Integer.parseInt(cardList.substring(cardStartIndex, cardList.length()));
+        if(card.value!=-1) {
+            for (cardIndex = playersCards.size() - 1; cardIndex >= 0; cardIndex--) {
+                if (playersCards.get(cardIndex).value == card.value)
+                    break;
+            }
+            biggestCards.add(playersCards.remove(cardIndex));
+            bigPlayer = players.get(whosTurn).me;
+            bigIndex = whosTurn;
+            for (int i = 0; i < originalSize; i++)
+                biggestCards.remove(0);
+        }
+        cardCounter++;
+
+        cardOutReply(cardList, cardCounter);
         //cardInfo();
 
         for(int i=toBeLoggedOut.size()-1;i>=0;i--){
@@ -311,16 +423,19 @@ class Game{
             gameOver(whosTurn);
 
         whosTurn++;
+        whosTurn%=3;
+        turnName = players.get(whosTurn).me.userName;
         XTurn();
 
     }
 
-    public void cardOutReply(String cardList)
+    public void cardOutReply(String cardList, int cardCounter)
     {
         String cardOutString = "cardOut ";
-        cardOutString += whosTurn + " ";
-        cardOutString += cardList;
-        for(int i=0;i<3;i++){
+        cardOutString += whosTurn + " " + cardCounter + " ";
+        cardOutString += cardList + "\r\n";
+        int playerSize = players.size();
+        for(int i=0;i<playerSize;i++){
             players.get(i).cardOutReply(cardOutString);
         }
     }
@@ -336,7 +451,8 @@ class Game{
             cardInfoString += " " + cardDecks.get(i).cards.size();
         }
         cardInfoString += "\r\n";
-        for(int i = 0; i<3;i++){
+        int playerSize = players.size();
+        for(int i = 0; i<playerSize;i++){
             players.get(i).cardInfo(cardInfoString);
         }
     }
@@ -365,7 +481,8 @@ class Game{
         }
 
         String gameOverString = "gameOver" + whosTurn + "\r\n";
-        for(int i = 0; i<3;i++){
+        int playersSize = players.size();
+        for(int i = 0; i<playersSize;i++){
             clientThread h = players.get(i);
             h.gameOver(gameOverString);
             h.notReady();
@@ -635,7 +752,7 @@ class clientThread extends Thread{
             if(availableRoomNumber[i]!=0)
                 continue;
             availableRoomNumber[i] = 1;
-            targetRoomNumber = i;
+            targetRoomNumber = i + 1;
             break;
         }
         if(targetRoomNumber == -1)
@@ -1017,14 +1134,18 @@ class clientThread extends Thread{
     {
         try{
             Game theGame = me.theRoom.game;
-            if(!theGame.turnName.equals(me.userName))
+            if(!theGame.turnName.equals(me.userName)){
+                System.out.println(theGame.turnName + " " + me.userName);
                 return 1;
+            }
             int answerIndex = clientMessage.indexOf(' ') + 1;
+            answerIndex = clientMessage.indexOf(' ', answerIndex) + 1;
             if(clientMessage.charAt(answerIndex) == 'y')
                 me.theRoom.game.landLordRegistration(1);
             else
                 me.theRoom.game.landLordRegistration(0);
         }catch (Exception ex){
+            System.out.println(ex);
             System.out.println("Exception in landLordCall(String clientMessage)");
             return -1;
         }

@@ -660,7 +660,6 @@ class ClientThread extends Thread
 			god.deskNum[roomIndex[j]-1] = playerCounter[j];
 		}
 		god.showSelectDesk();
-
 	}
 
 	public void joinUser_send()
@@ -1260,6 +1259,12 @@ class ClientThread extends Thread
         int startElementIndex = clientMessage.indexOf(' ') + 1;
         int endElementIndex = clientMessage.indexOf(' ', startElementIndex);
         userIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+        startElementIndex = endElementIndex + 1;
+        endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+        cardCounter = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+        cardListColor = new int[cardCounter];
+        cardListValue = new int[cardCounter];
+        int i = 0;
         while(true){
             startElementIndex = endElementIndex + 1;
             endElementIndex = clientMessage.indexOf(' ', startElementIndex);
@@ -1267,17 +1272,17 @@ class ClientThread extends Thread
                 break;
             int card = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
             if(card == 57){
-                cardListColor[cardCounter] = 5;
-                cardListValue[cardCounter] = 1;
+                cardListColor[i] = 5;
+                cardListValue[i] = 1;
             } else if(card == 58){
-                cardListColor[cardCounter] = 5;
-                cardListValue[cardCounter] = 2;
+                cardListColor[i] = 5;
+                cardListValue[i] = 2;
             }else{
                 card--;
-                cardListColor[cardCounter] = (card%4) + 1;
-                cardListValue[cardCounter] = card/4;
+                cardListColor[i] = (card%4) + 1;
+                cardListValue[i] = card/4;
             }
-            cardCounter++;
+            i++;
         }
         int card = Integer.parseInt(clientMessage.substring(startElementIndex, clientMessage.length()));
         if(card == -1){
@@ -1287,17 +1292,17 @@ class ClientThread extends Thread
             passCounter = passCounter>0?passCounter-1:0;
         }
         if(card == 57){
-            cardListColor[cardCounter] = 5;
-            cardListValue[cardCounter] = 1;
+            cardListColor[i] = 5;
+            cardListValue[i] = 1;
         } else if(card == 58){
-            cardListColor[cardCounter] = 5;
-            cardListValue[cardCounter] = 2;
+            cardListColor[i] = 5;
+            cardListValue[i] = 2;
         }else{
             card--;
-            cardListColor[cardCounter] = (card%4) + 1;
-            cardListValue[cardCounter] = card/4;
+            cardListColor[i] = (card%4) + 1;
+            cardListValue[i] = card/4;
         }
-        cardCounter++;
+        i++;
         //your turn
     }
 
