@@ -844,7 +844,7 @@ public class Game extends JPanel{
 	 */
 	public void initPlayer() {
 		if(p.hasleft){
-			textInfo[0].setText(p.player1);;
+			textInfo[0].setText(p.player1);
 		}
 		else
 			textInfo[0].setText("");
@@ -865,6 +865,10 @@ public class Game extends JPanel{
 			add(headPicture[2]);
 			headPicture[2].setOpaque(false);
 		}
+		if(p.leftReady)
+			beReady(1);
+		if(p.rightReady)
+			beReady(2);
 	}
 	
 	/*

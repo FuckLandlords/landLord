@@ -73,14 +73,18 @@ public class client extends JApplet{
 	int roomIndex;
 
 	
-	int[]  headNum = {17,16,18};                 //用户玩家头像
+	int[]  headNum = {5,5,5};                 //用户玩家头像
                        							//右边玩家头像，获取
 
 	boolean hasleft = false;    //鏄惁鏈夊乏杈圭帺瀹�
 	boolean hasRight = false;   //鏄惁鏈夊彸杈圭帺瀹�
+	
+	boolean leftReady = false;  //是否准备好
+	boolean rightReady = false;
+	boolean ready = false;
 
 	
-	int[] gender = {MALE,FEMALE,MALE};     //0表示男性，1表示女性
+	int[] gender = {MALE,MALE,MALE};     //0表示男性，1表示女性
 	
 	int landlord = 0;           //0 表示用户， 1表示左玩家，2表示右玩家  
 	
@@ -772,11 +776,15 @@ class ClientThread extends Thread
 						god.hasRight = true;
 						god.player2 = playerList[1];
 						god.playerIndex = 0;
+						if(readyList[1] == 1)
+							god.rightReady = true;
 					}
 					else{
 						god.hasleft = true;
 						god.player1 = playerList[0];
 						god.playerIndex=1;
+						if(readyList[0] == 1)
+							god.leftReady = true;
 					}
 				}
 				else{
@@ -784,21 +792,34 @@ class ClientThread extends Thread
 						god.hasRight = true;
 						god.player2 = playerList[1];
 						god.hasleft = true;
+						if(readyList[1] == 1)
+							god.rightReady = true;
 						god.player1 = playerList[2];
+						if(readyList[2] == 1)
+							god.leftReady = true;
 						god.playerIndex = 0;
+						
 					}
 					else if (playerList[1] == god.player) {
 						god.hasleft = true;
 						god.player1 = playerList[0];
+						if(readyList[0] == 1)
+							god.leftReady = true;
 						god.hasRight = true;
 						god.player2 = playerList[2];
+						if(readyList[2] == 1)
+							god.rightReady = true;
 						god.playerIndex = 1;
 					}
 					else{
 						god.hasleft = true;
 						god.player1 = playerList[1];
+						if(readyList[1] == 1)
+							god.leftReady = true;
 						god.hasRight = true;
 						god.player2 = playerList[0];
+						if(readyList[0] == 1)
+							god.rightReady = true;
 						god.playerIndex = 2;
 					}
 				}
@@ -865,8 +886,14 @@ class ClientThread extends Thread
         	return;
         }
         if(quitterName.equals(god.player)){
-        	god.showSelectDesk();
+        	//god.showSelectDesk();
         	god.isFirstEnterDesk = true;
+        	god.hasleft = false;
+        	god.hasRight = false;
+        	god.leftReady = false;
+        	god.rightReady = false;
+        	god.landlord = -1;
+        	tablesStatus_send();
         }
         else if (quitterName.equals(god.player1)) {
 			god.game.leftQuit();
@@ -1015,6 +1042,17 @@ class ClientThread extends Thread
                 endElementIndex = clientMessage.length();
         }
         //your turn
+        for(int j = 0; j < 17; j++){
+        	god.game.myCard[j].color = yourCardsColor[j];
+        	god.game.myCard[j].num = yourCardsValue[j];
+        }
+        for(int j = 0; j < 3; j++){
+        	god.game.three_cards[j].num = 1;
+        	god.game.three_cards[j].color = j+1;
+        	god.game.myCard[j+17].num = 1;
+        	god.game.myCard[j+17].color = j+1;
+        }
+        god.game.startGame();
     }
     
 
