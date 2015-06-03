@@ -358,8 +358,24 @@ class ClientThread extends Thread
                     ready_rec(choice);
                 } else if(choice.startsWith("notReady")){
                     notReady_rec(choice);
-                } else{
-                    
+                } else if(choice.startsWith("gameStart")){
+                    gameStart_rec(choice);
+                } else if(choice.startsWith("landLordCall")){
+                    landLordCall_rec(choice);
+                } else if(choice.startsWith("landLordIs")){
+                    landLordIs_rec(choice);
+                } else if(choice.startsWith("landLord")){
+                    landLord_rec(choice);
+                } else if(choice.startsWith("XTurn")){
+                    XTurn_rec(choice);
+                } else if(choice.startsWith("XTimeOut")){
+                    XTimeOut_rec(choice);
+                } else if(choice.startsWith("XTime")){
+                    XTime_rec(choice);
+                } else if(choice.startsWith("cardOut")){
+                    cardOut_rec(choice);
+                } else {
+
                 }
             }
         }catch (Exception ex){
@@ -946,6 +962,232 @@ class ClientThread extends Thread
                 endElementIndex = clientMessage.length();
             readyList[i] = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
         }
+        //your turn
+    }
+
+    //there is no need for gameStart_send
+    public void gameStart_rec(String clientMessage)
+    {
+        String[] playerList  = new String [3]; // player name, according to the order of play
+        int[] yourCardsColor = new int[17];
+        int[] yourCardsValue = new int[17];
+        int[] unfoldedCard = new int[3];
+        //my stuff
+        int startElementIndex = clientMessage.indexOf(' ') + 1;
+        int endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+        for(int i=0;i<3;i++){
+            playerList[i] = clientMessage.substring(startElementIndex, endElementIndex);
+            startElementIndex = endElementIndex + 1;
+            endElementIndex = clientMessage.indexOf(' ', startElementIndex) + 1;
+        }
+        for(int i=0;i<17;i++){
+            int card = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+            if(card == 57){
+                yourCardsColor[i] = 5;
+                yourCardsValue[i] = 1;
+            } else if(card == 58){
+                yourCardsColor[i] = 5;
+                yourCardsValue[i] = 2;
+            }else{
+                card--;
+                yourCardsColor[i] = (card%4) + 1;
+                yourCardsValue[i] = card/4;
+            }
+            startElementIndex = endElementIndex + 1;
+            endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+        }
+        for(int i=0;i<3;i++){
+            int card = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+            if(card == 57){
+                unfoldedCard[i] = 5;
+                unfoldedCard[i] = 1;
+            } else if(card == 58){
+                unfoldedCard[i] = 5;
+                unfoldedCard[i] = 2;
+            }else{
+                card--;
+                unfoldedCard[i] = (card%4) + 1;
+                unfoldedCard[i] = card/4;
+            }
+            startElementIndex = endElementIndex + 1;
+            endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+            if(endElementIndex == -1)
+                endElementIndex = clientMessage.length();
+        }
+        //your turn
+    }
+    
+
+    //i ignore gameInfo
+
+    //there is no need for landLord_send
+    public void landLord_rec(String clientMessage)
+    {
+        int userIndex = -1;// the user that is requested to answer landlord call
+        //my stuff
+        int startElementIndex = clientMessage.indexOf(' ') + 1;
+        int endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+        if(endElementIndex == -1)
+            endElementIndex = clientMessage.length();
+        userIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+        //your turn
+    }
+
+    public void landLordCall_send(int userIndex, String answer)//your answer to landlord call, should be yes or no
+    {
+        try{
+            String toSend = "landLordCall " + userIndex + " " + answer + "\r\n";
+            dout.write(toSend.getBytes("UTF-8"));
+        } catch (Exception ex){
+            System.out.println("landLordCall_send");
+            return;
+        }
+    }
+
+    public void landLordCall_rec(String clientMessage)
+    {
+        int userIndex = -1;
+        boolean agreeOrNot = false; //answer
+        //my stuff
+        int startElementIndex = clientMessage.indexOf(' ') + 1;
+        int endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+        userIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+        startElementIndex = endElementIndex + 1;
+        endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+        if(endElementIndex == -1)
+            endElementIndex = clientMessage.length();
+        if(clientMessage.substring(startElementIndex, endElementIndex).startsWith("y"))
+            agreeOrNot = true;
+        else
+            agreeOrNot = false;
+        //your turn
+    }
+
+    //there is no need for landLordIs_send
+    public void landLordIs_rec(String clientMessage)
+    {
+        int landLordIndex = -1;
+        //my stuff
+        int startElementIndex = clientMessage.indexOf(' ') + 1;
+        int endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+        if(endElementIndex == -1)
+            endElementIndex = clientMessage.length();
+        landLordIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+        //your turn
+    }
+
+    //there is no need for XTurn_send
+    public void XTurn_rec(String clientMessage)
+    {
+        int userIndex = -1; //the user that should play
+        //my stuff
+        int startElementIndex = clientMessage.indexOf(' ') + 1;
+        int endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+        if(endElementIndex == -1)
+            endElementIndex = clientMessage.length();
+        userIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+        //your turn
+    }
+
+    //there is no need for XTime_send
+    public void XTime_rec(String clientMessage)
+    {
+        int userIndex = -1; //the user that is facing timeout
+        int remainingTime = -1; //time remaining, in second (should be 10)
+        // my stuff
+        int startElementIndex = clientMessage.indexOf(' ') + 1;
+        int endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+        userIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+        startElementIndex = endElementIndex + 1;
+        endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+        if(endElementIndex == -1)
+            endElementIndex = clientMessage.length();
+        remainingTime = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+        //your turn
+    }
+
+    //there is no need for XTimeOut_send
+    public void XTimeOut_rec(String clientMessage)
+    {
+        int userIndex = -1; // the user that triggered timeout
+        //my stuff
+        int startElementIndex = clientMessage.indexOf(' ') + 1;
+        int endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+        if(endElementIndex == -1)
+            endElementIndex = clientMessage.length();
+        userIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+    }
+
+    public void cardOut_send(int listSize,int[] valueList, int[] colorList)
+    {
+        int[] cardList = new int[listSize];
+        String cardOutString = "cardOut";
+        try{
+            if(listSize != 0) {
+                for (int i = 0; i < listSize; i++) {
+                    if (colorList[i] != 5) {
+                        cardList[i] = valueList[i] * 4 + colorList[i];
+                    } else {
+                        if (valueList[i] == 1)
+                            cardList[i] = 57;
+                        else
+                            cardList[i] = 58;
+                    }
+                    cardOutString += " " + cardList[i];
+                }
+            } else {
+                cardOutString += " -1";
+            }
+            cardOutString += "\r\n";
+            dout.write(cardOutString.getBytes("UTF-8"));
+        } catch (Exception ex){
+            System.out.println("cardOut(int[] valueList, int[] colorList)");
+            return;
+        }
+    }
+
+    public void cardOut_rec(String clientMessage)
+    {
+        int userIndex = -1;
+        int cardCounter = 0; // listSize
+        int[] cardListColor = null;
+        int[] cardListValue = null;
+        //my stuff
+        int startElementIndex = clientMessage.indexOf(' ') + 1;
+        int endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+        userIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+        while(true){
+            startElementIndex = endElementIndex + 1;
+            endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+            if(endElementIndex == -1)
+                break;
+            int card = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+            if(card == 57){
+                cardListColor[cardCounter] = 5;
+                cardListValue[cardCounter] = 1;
+            } else if(card == 58){
+                cardListColor[cardCounter] = 5;
+                cardListValue[cardCounter] = 2;
+            }else{
+                card--;
+                cardListColor[cardCounter] = (card%4) + 1;
+                cardListValue[cardCounter] = card/4;
+            }
+            cardCounter++;
+        }
+        int card = Integer.parseInt(clientMessage.substring(startElementIndex, clientMessage.length()));
+        if(card == 57){
+            cardListColor[cardCounter] = 5;
+            cardListValue[cardCounter] = 1;
+        } else if(card == 58){
+            cardListColor[cardCounter] = 5;
+            cardListValue[cardCounter] = 2;
+        }else{
+            card--;
+            cardListColor[cardCounter] = (card%4) + 1;
+            cardListValue[cardCounter] = card/4;
+        }
+        cardCounter++;
         //your turn
     }
 
