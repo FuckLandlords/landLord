@@ -984,7 +984,7 @@ public class Game extends JPanel{
 			myCardJPanels[j].setVisible(true);
 		}
 		//初始化玩家的牌
-		
+		sortCard(17);
 		setMyCardJpanel();
 		for(int j = 0 ;j < 17; j++){
 			myCardJPanels[j].localX = 800;
