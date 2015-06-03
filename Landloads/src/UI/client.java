@@ -308,7 +308,7 @@ class ClientThread extends Thread
 	DataOutputStream dout;
 	BufferedReader br;
 	client god;
-	int[] passList;
+	int passCounter;
 
 	ClientThread(client p)
 	{
@@ -324,9 +324,7 @@ class ClientThread extends Thread
 			sin = new BufferedReader(isr);
 
 			god = p;
-			passList = new int[3];
-			for(int i=0;i<3;i++)
-				passList[i] = 0;
+			passCounter = 0;
 
 			System.out.println(sin.readLine());
 		}
@@ -1124,12 +1122,17 @@ class ClientThread extends Thread
     public void XTurn_rec(String clientMessage)
     {
         int userIndex = -1; //the user that should play
+        boolean freeToPlay = false; // whether player of userIndex (not necessarily you) can use any card you want to play
         //my stuff
         int startElementIndex = clientMessage.indexOf(' ') + 1;
         int endElementIndex = clientMessage.indexOf(' ', startElementIndex);
         if(endElementIndex == -1)
             endElementIndex = clientMessage.length();
         userIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+        if(passCounter == 2) {
+            freeToPlay = true;
+            passCounter = 0;
+        }
         //your turn
     }
 
@@ -1203,9 +1206,8 @@ class ClientThread extends Thread
         while(true){
             startElementIndex = endElementIndex + 1;
             endElementIndex = clientMessage.indexOf(' ', startElementIndex);
-            if(endElementIndex == -1){
-            	break;
-            }
+            if(endElementIndex == -1)
+                break;
             int card = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
             if(card == 57){
                 cardListColor[cardCounter] = 5;
@@ -1221,6 +1223,12 @@ class ClientThread extends Thread
             cardCounter++;
         }
         int card = Integer.parseInt(clientMessage.substring(startElementIndex, clientMessage.length()));
+        if(card == -1){
+            cardCounter = -1;//so it will be added to zero
+            passCounter ++;
+        } else{
+            passCounter = passCounter>0?passCounter-1:0;
+        }
         if(card == 57){
             cardListColor[cardCounter] = 5;
             cardListValue[cardCounter] = 1;
