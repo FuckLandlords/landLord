@@ -1002,14 +1002,15 @@ class ClientThread extends Thread
         String[] playerList  = new String [3]; // player name, according to the order of play
         int[] yourCardsColor = new int[17];
         int[] yourCardsValue = new int[17];
-        int[] unfoldedCard = new int[3];
+        int[] unfoldedCardsColor = new int[3];
+        int[] unfoldedCardsValue = new int[3];
         //my stuff
         int startElementIndex = clientMessage.indexOf(' ') + 1;
         int endElementIndex = clientMessage.indexOf(' ', startElementIndex);
         for(int i=0;i<3;i++){
             playerList[i] = clientMessage.substring(startElementIndex, endElementIndex);
             startElementIndex = endElementIndex + 1;
-            endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+            endElementIndex = clientMessage.indexOf(' ', startElementIndex) + 1;
         }
         for(int i=0;i<17;i++){
             int card = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
@@ -1030,16 +1031,20 @@ class ClientThread extends Thread
         for(int i=0;i<3;i++){
             int card = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
             if(card == 57){
-                unfoldedCard[i] = 5;
-                unfoldedCard[i] = 1;
+                unfoldedCardsColor[i] = 5;
+                unfoldedCardsValue[i] = 1;
             } else if(card == 58){
-                unfoldedCard[i] = 5;
-                unfoldedCard[i] = 2;
+                unfoldedCardsColor[i] = 5;
+                unfoldedCardsValue[i] = 2;
             }else{
                 card--;
-                unfoldedCard[i] = (card%4) + 1;
-                unfoldedCard[i] = card/4;
+                unfoldedCardsColor[i] = (card%4) + 1;
+                unfoldedCardsValue[i] = card/4;
             }
+            startElementIndex = endElementIndex + 1;
+            endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+            if(endElementIndex == -1)
+                endElementIndex = clientMessage.length();
         }
         //your turn
         for(int j = 0; j < 17; j++){
