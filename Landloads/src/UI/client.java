@@ -274,7 +274,15 @@ public class client extends JApplet{
 	
 	public int getIndex(int index) {
 		if(playerIndex == 0){
-			return index;
+			if(index == 0){
+				return 0;
+			}
+			else if (index == 1) {
+				return 2;
+			}
+			else {
+				return 1;
+			}
 		}
 		else if (playerIndex == 1) {
 			if(index == 0)
@@ -921,13 +929,22 @@ class ClientThread extends Thread
         	god.leftReady = false;
         	god.rightReady = false;
         	god.landlord = -1;
+        	god.game.ready[0].setVisible(false);
+        	god.game.ready[3].setVisible(true);
         	tablesStatus_send();
+        	
         }
         else if (quitterName.equals(god.player1)) {
 			god.game.leftQuit();
+			god.hasleft = false;
+			god.leftReady = false;
+			god.game.ready[1].setVisible(false);
 		}
         else {
 			god.game.rightQuit();
+			god.hasRight = false;
+			god.rightReady = false;
+			god.game.ready[2].setVisible(false);
 		}
     }
    
@@ -1133,9 +1150,9 @@ class ClientThread extends Thread
             agreeOrNot = false;
         //your turn
         if(agreeOrNot)
-        	god.game.notOutOrCallLandlord(1, god.getIndex(userIndex));
+        	god.game.notOutOrCallLandlord(2, god.getIndex(userIndex));
         else{
-        	god.game.notOutOrCallLandlord(0, god.getIndex(userIndex));
+        	god.game.notOutOrCallLandlord(1, god.getIndex(userIndex));
         }
     }
 

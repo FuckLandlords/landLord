@@ -859,9 +859,21 @@ public class Game extends JPanel{
 			add(headPicture[1]);
 			headPicture[1].setOpaque(false);
 		}
+		else{
+			remove(headPicture[1]);
+			headPicture[1] = new HeadPicture(image_transparent, image_transparent);
+			add(headPicture[1]);
+			headPicture[1].setOpaque(false);
+		}
 		if(p.hasRight){
 			remove(headPicture[2]);
 			headPicture[2] = new HeadPicture(image_frame, image_head[p.headNum[2]-1]);
+			add(headPicture[2]);
+			headPicture[2].setOpaque(false);
+		}
+		else{
+			remove(headPicture[2]);
+			headPicture[2] = new HeadPicture(image_transparent, image_transparent);
 			add(headPicture[2]);
 			headPicture[2].setOpaque(false);
 		}
