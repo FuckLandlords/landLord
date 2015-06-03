@@ -1051,7 +1051,7 @@ public class Game extends JPanel{
 			clock_y = 230;
 		}
 		if(type == 0)
-			count = 10;
+			count = 20;
 		else {
 			count = 20;
 		}

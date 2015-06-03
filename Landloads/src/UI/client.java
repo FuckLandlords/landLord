@@ -271,6 +271,32 @@ public class client extends JApplet{
 		game.initPlayer();
 		game.setVisible(true);
 	}
+	
+	public int getIndex(int index) {
+		if(playerIndex == 0){
+			return index;
+		}
+		else if (playerIndex == 1) {
+			if(index == 0)
+				return 1;
+			else if (index == 1) {
+				return 0;
+			}
+			else {
+				return 2;
+			}
+		}
+		else{
+			if(index == 0)
+				return 2;
+			else if (index == 1) {
+				return 1;
+			}
+			else {
+				return 0;
+			}
+		}
+	}
 	 public void infoDialog(String mesg)  
 	    {  
 	        JOptionPane.showMessageDialog(null,  
@@ -1008,7 +1034,7 @@ class ClientThread extends Thread
         for(int i=0;i<3;i++){
             playerList[i] = clientMessage.substring(startElementIndex, endElementIndex);
             startElementIndex = endElementIndex + 1;
-            endElementIndex = clientMessage.indexOf(' ', startElementIndex) + 1;
+            endElementIndex = clientMessage.indexOf(' ', startElementIndex);
         }
         for(int i=0;i<17;i++){
             int card = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
@@ -1044,6 +1070,7 @@ class ClientThread extends Thread
             if(endElementIndex == -1)
                 endElementIndex = clientMessage.length();
         }
+        System.out.println("here");
         //your turn
         for(int j = 0; j < 17; j++){
         	god.game.myCard[j].color = yourCardsColor[j];
@@ -1072,7 +1099,7 @@ class ClientThread extends Thread
             endElementIndex = clientMessage.length();
         userIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
         //your turn
-        
+        god.game.startTimer(god.getIndex(userIndex), 0);
     }
 
     public void landLordCall_send(int userIndex, String answer)//your answer to landlord call, should be yes or no
