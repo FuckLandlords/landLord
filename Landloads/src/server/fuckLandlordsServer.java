@@ -1,5 +1,5 @@
 /**
- * Created by äÈÒã on 5/22/2015.
+ * Created by ï¿½ï¿½ï¿½ï¿½ on 5/22/2015.
  */
 package server;
 import javax.lang.model.type.ArrayType;
@@ -149,7 +149,7 @@ class Game{
         if(agreeOrNot == 1)
             broadcastString += " yes\r\n";
         else
-            broadcastString += "no\r\n";
+            broadcastString += " no\r\n";
         for(int i=0;i<3;i++)
             players.get(i).landLordCallBroadcast(broadcastString);
 
