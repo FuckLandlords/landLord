@@ -931,6 +931,10 @@ class ClientThread extends Thread
         	god.landlord = -1;
         	god.game.ready[0].setVisible(false);
         	god.game.ready[3].setVisible(true);
+        	god.game.ready[1].setVisible(false);
+        	god.game.ready[2].setVisible(false);
+        	god.player1 = "";
+        	god.player2 = "";
         	tablesStatus_send();
         	
         }
@@ -938,12 +942,14 @@ class ClientThread extends Thread
 			god.game.leftQuit();
 			god.hasleft = false;
 			god.leftReady = false;
+			god.player1 = "";
 			god.game.ready[1].setVisible(false);
 		}
         else {
 			god.game.rightQuit();
 			god.hasRight = false;
 			god.rightReady = false;
+			god.player2 = "";
 			god.game.ready[2].setVisible(false);
 		}
     }
