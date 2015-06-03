@@ -308,6 +308,7 @@ class ClientThread extends Thread
 	DataOutputStream dout;
 	BufferedReader br;
 	client god;
+	int[] passList;
 
 	ClientThread(client p)
 	{
@@ -323,6 +324,9 @@ class ClientThread extends Thread
 			sin = new BufferedReader(isr);
 
 			god = p;
+			passList = new int[3];
+			for(int i=0;i<3;i++)
+				passList[i] = 0;
 
 			System.out.println(sin.readLine());
 		}
@@ -1005,7 +1009,7 @@ class ClientThread extends Thread
         for(int i=0;i<3;i++){
             playerList[i] = clientMessage.substring(startElementIndex, endElementIndex);
             startElementIndex = endElementIndex + 1;
-            endElementIndex = clientMessage.indexOf(' ', startElementIndex) + 1;
+            endElementIndex = clientMessage.indexOf(' ', startElementIndex);
         }
         for(int i=0;i<17;i++){
             int card = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
@@ -1036,10 +1040,6 @@ class ClientThread extends Thread
                 unfoldedCard[i] = (card%4) + 1;
                 unfoldedCard[i] = card/4;
             }
-            startElementIndex = endElementIndex + 1;
-            endElementIndex = clientMessage.indexOf(' ', startElementIndex);
-            if(endElementIndex == -1)
-                endElementIndex = clientMessage.length();
         }
         //your turn
         for(int j = 0; j < 17; j++){
@@ -1197,8 +1197,9 @@ class ClientThread extends Thread
         while(true){
             startElementIndex = endElementIndex + 1;
             endElementIndex = clientMessage.indexOf(' ', startElementIndex);
-            if(endElementIndex == -1)
-                break;
+            if(endElementIndex == -1){
+            	break;
+            }
             int card = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
             if(card == 57){
                 cardListColor[cardCounter] = 5;

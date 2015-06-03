@@ -1,10 +1,12 @@
 /**
- * Created by ï¿½ï¿½ï¿½ï¿½ on 5/22/2015.
+ * Created by äÈÒã on 5/22/2015.
  */
-package server;
 
+import javax.lang.model.type.ArrayType;
+import java.lang.reflect.Array;
 import java.net.*;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 class User{
@@ -52,31 +54,34 @@ class Game{
     Timer timer2;
     Room theRoom;
 
-    Game()
+    Game(Room theRoom)
     {
-        landLord = null;
-        bigPlayer = null;
-        whosTurn = 0;
-        turnName = players.get(0).me.userName;
-        landLordSubmissionTable = new int[3];
-        this.theRoom = theRoom;
-        for(int i=0;i<3;i++)
-            landLordSubmissionTable[i] = -1;
-        gameStartPreparation();
-    }
-
-    Game(ArrayList<clientThread> players, Room theRoom)
-    {
-        landLord = null;
-        bigPlayer = null;
-        whosTurn = 0;
-        turnName = players.get(0).me.userName;
-        landLordSubmissionTable = new int[3];
-        this.theRoom = theRoom;
-        for(int i=0;i<3;i++)
-            landLordSubmissionTable[i] = -1;
-        this.players = players; // this should be randomized
-        gameStartPreparation();
+        try {
+            ArrayList<clientThread> players = theRoom.users;
+            landLord = null;
+            bigPlayer = null;
+            bigIndex = -2;
+            whosTurn = 0;
+            turnName = players.get(0).me.userName;
+            landLordSubmissionTable = new int[3];
+            this.theRoom = theRoom;
+            for (int i = 0; i < 3; i++)
+                landLordSubmissionTable[i] = -1;
+            this.players = players; // this should be randomized
+            toBeLoggedOut = new ArrayList<>();
+            cardDecks = new ArrayList<>();
+            for(int i=0;i<3;i++){
+                CardDeck ha = new CardDeck();
+                ha.cards = new ArrayList<>();
+                cardDecks.add(ha);
+            }
+            unfoldedCards = new ArrayList<>();
+            biggestCards = new ArrayList<>();
+            gameStartPreparation();
+        } catch (Exception ex){
+            System.out.println(ex);
+            System.out.println("Exception in Game(Room theRoom)");
+        }
     }
 
     public void gameStartPreparation()
@@ -124,8 +129,8 @@ class Game{
 
     public void gameStartNotifier()
     {
-        for(int i = players.size()-1;i>=0;i++){
-            players.get(i).gameStart();
+        for(int i = players.size()-1;i>=0;i--){
+            players.get(i).gameStart(this);
         }
     }
 
@@ -784,14 +789,14 @@ class clientThread extends Thread{
             if(me.theRoom.state == 3) {
                 me.theRoom.allReadyLock = 1;
                 //start the game
-                Game newGame = new Game(me.theRoom.users, me.theRoom);
-                me.theRoom.game = newGame;
+                Game newGame = new Game(me.theRoom);
                 newGame.gameStartNotifier();
                 newGame.landLordInvitation();
                 me.theRoom.allReadyLock = 0;
             }
 
         } catch (Exception ex){
+            System.out.println(ex);
             System.out.println("Exception in ready()");
             return -1;
         }
@@ -882,11 +887,11 @@ class clientThread extends Thread{
         return 0;
     }
 
-    public int gameStart()
+    public int gameStart(Game theGame)
     {
         try{
             String gameInfoString = "gameStart";
-            Game theGame = me.theRoom.game;
+            me.theRoom.game = theGame;
             int myPlace = 0;
             for(int i = 0; i < 3;i++){
                 String userName = theGame.players.get(i).me.userName;
@@ -905,6 +910,7 @@ class clientThread extends Thread{
             gameInfoString += "\r\n";
             dout.write(gameInfoString.getBytes("UTF-8"));
         } catch (Exception ex){
+            System.out.println(ex);
             System.out.println("Exception in gameStart()");
             return -1;
         }
