@@ -357,6 +357,7 @@ class Game{
 
     public void gameOver(int winner)
     {
+        theRoom.allReadyLock = 0;
         for(int i=toBeLoggedOut.size()-1;i>=0;i--){
             clientThread h = toBeLoggedOut.get(i);
             h.quitRoom();
@@ -842,7 +843,7 @@ class clientThread extends Thread{
                 Game newGame = new Game(me.theRoom);
                 newGame.gameStartNotifier();
                 newGame.landLordInvitation();
-                me.theRoom.allReadyLock = 0;
+                me.theRoom.state++;
             }
 
         } catch (Exception ex){
