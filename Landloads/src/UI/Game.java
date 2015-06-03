@@ -1224,8 +1224,9 @@ public class Game extends JPanel{
 		public void mouseClicked(MouseEvent e) {
 			//p.showSelectDesk();
 			//changeHead();
-			ready[3].setVisible(false);
-			ready[0].setVisible(true);
+			//ready[3].setVisible(false);
+			//ready[0].setVisible(true);
+			p.info.ready_send();
 		}
 		public void mousePressed(MouseEvent e) {}
 		public void mouseReleased(MouseEvent e) {}

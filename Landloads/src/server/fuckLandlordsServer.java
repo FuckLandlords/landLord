@@ -1,12 +1,9 @@
 /**
- * Created by äÈÒã on 5/22/2015.
+ * Created by ï¿½ï¿½ï¿½ï¿½ on 5/22/2015.
  */
-
-import javax.lang.model.type.ArrayType;
-import java.lang.reflect.Array;
+package server;
 import java.net.*;
 import java.io.*;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 class User{

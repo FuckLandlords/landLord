@@ -787,6 +787,7 @@ class ClientThread extends Thread
 					}
 				}
 				god.showGame();
+				
         	}
         	else{
         		if(playerCounter == 2){
@@ -881,6 +882,16 @@ class ClientThread extends Thread
             endElementIndex = clientMessage.length();
         userName = clientMessage.substring(startElementIndex, endElementIndex);
         //your turn
+        if(userName.equals(god.player)){
+        	god.game.ready[3].setVisible(false);
+        	god.game.ready[0].setVisible(true);
+        }
+        else if (userName.equals(god.player1)) {
+			god.game.beReady(1);
+		}
+        else{
+        	god.game.beReady(2);
+        }
     }
 
     public void notReady_send()
