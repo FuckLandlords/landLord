@@ -1050,10 +1050,10 @@ class ClientThread extends Thread
         	god.game.myCard[j].num = yourCardsValue[j];
         }
         for(int j = 0; j < 3; j++){
-        	god.game.three_cards[j].num = 1;
-        	god.game.three_cards[j].color = j+1;
-        	god.game.myCard[j+17].num = 1;
-        	god.game.myCard[j+17].color = j+1;
+        	god.game.three_cards[j].num = unfoldedCardsValue[j];
+        	god.game.three_cards[j].color = unfoldedCardsColor[j];
+        	god.game.myCard[j+17].num = unfoldedCardsValue[j];
+        	god.game.myCard[j+17].color = unfoldedCardsColor[j];
         }
         god.game.startGame();
     }
