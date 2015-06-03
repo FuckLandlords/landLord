@@ -1,5 +1,5 @@
 /**
- * Created by ï¿½ï¿½ï¿½ï¿½ on 5/22/2015.
+ * Created by äÈÒã on 5/22/2015.
  */
 package server;
 import javax.lang.model.type.ArrayType;
@@ -149,7 +149,7 @@ class Game{
         if(agreeOrNot == 1)
             broadcastString += " yes\r\n";
         else
-            broadcastString += " no\r\n";
+            broadcastString += "no\r\n";
         for(int i=0;i<3;i++)
             players.get(i).landLordCallBroadcast(broadcastString);
 
@@ -299,7 +299,7 @@ class Game{
         }
 
         cardOutReply(cardList);
-        cardInfo();
+        //cardInfo();
 
         for(int i=toBeLoggedOut.size()-1;i>=0;i--){
             if(toBeLoggedOut.get(i).me.userName.equals(userName)){
@@ -386,11 +386,15 @@ public class fuckLandlordsServer {
     {
         Hashtable<String, User> userList = new Hashtable<String, User>();
         ArrayList<Room> roomArray = new ArrayList<Room>();
+        int[] availableRoomNumber = new int[20];
+        for(int i=0;i<20;i++){
+            availableRoomNumber[i] = 0;
+        }
 
         ServerSocket soc=new ServerSocket(2015);
         System.out.println("Fuck Landlords Server Started on Port Number 2015");
         while(true){
-            clientThread t = new clientThread(soc.accept(), userList, roomArray);
+            clientThread t = new clientThread(soc.accept(), userList, roomArray, availableRoomNumber);
         }
     }
 }
@@ -409,8 +413,9 @@ class clientThread extends Thread{
     ArrayList<Room> roomArray;
 
     User me;
+    int[] availableRoomNumber;
 
-    clientThread(Socket soc, Hashtable<String, User> userList, ArrayList<Room> roomArray)
+    clientThread(Socket soc, Hashtable<String, User> userList, ArrayList<Room> roomArray, int[] availableRoomNumber)
     {
         try
         {
@@ -426,6 +431,7 @@ class clientThread extends Thread{
 
             this.userList = userList;
             this.roomArray = roomArray;
+            this.availableRoomNumber = availableRoomNumber;
 
             dout.write(("220 Fuck Landlords Server Ready.\r\n").getBytes("UTF-8"));
             start();
@@ -551,8 +557,15 @@ class clientThread extends Thread{
         try{
             Random random = new Random();
             int originalSize = roomArray.size();
-            if(originalSize == 0)
+            String tableStatusString;
+            if(originalSize == 0) {
                 openNewRoomNoDout();
+                if (me.theRoom == null) {
+                    tableStatusString = "joinRoom fail\r\n";
+                    dout.write(tableStatusString.getBytes("UTF-8"));
+                    return 1;
+                }
+            }
             else
             {
                 int partition = random.nextInt(originalSize);
@@ -572,10 +585,15 @@ class clientThread extends Thread{
                     }
                     else{
                         openNewRoomNoDout();
+                        if(me.theRoom == null) {
+                            tableStatusString = "joinRoom fail\r\n";
+                            dout.write(tableStatusString.getBytes("UTF-8"));
+                            return 1;
+                        }
                     }
                 }
             }
-            String tableStatusString = "joinRoom check " + generateTableStatusString(me.theRoom) + "\r\n";
+            tableStatusString = "joinRoom check " + generateTableStatusString(me.theRoom) + "\r\n";
             me.theRoom.notifyJoin(tableStatusString);
 
         }
@@ -611,15 +629,42 @@ class clientThread extends Thread{
 
     public Room openNewRoomNoDout()
     {
+        int targetRoomNumber = -1;
+        for(int i=0;i<20;i++){
+            if(availableRoomNumber[i]!=0)
+                continue;
+            availableRoomNumber[i] = 1;
+            targetRoomNumber = i;
+            break;
+        }
+        if(targetRoomNumber == -1)
+            return null;
         Room newRoom = new Room();
         newRoom.game = null;
         newRoom.users = new ArrayList<>();
         newRoom.users.add(this);
         newRoom.state = 0;
-        if(roomArray.size() == 0)
+        /*if(roomArray.size() == 0)
             newRoom.roomNumber = 1;
         else
-            newRoom.roomNumber = roomArray.get(roomArray.size()).roomNumber + 1;
+            newRoom.roomNumber = roomArray.get(roomArray.size()).roomNumber + 1;*/
+        newRoom.roomNumber = targetRoomNumber;
+        roomArray.add(newRoom);
+        me.theRoom = newRoom;
+        return newRoom;
+    }
+
+    public Room openNewRoomNoDout(int targetRoomNumber)
+    {
+        if(availableRoomNumber[targetRoomNumber] == 1)
+            return null;
+        availableRoomNumber[targetRoomNumber] = 1;
+        Room newRoom = new Room();
+        newRoom.game = null;
+        newRoom.users = new ArrayList<>();
+        newRoom.users.add(this);
+        newRoom.state = 0;
+        newRoom.roomNumber = targetRoomNumber;
         roomArray.add(newRoom);
         me.theRoom = newRoom;
         return newRoom;
@@ -716,8 +761,12 @@ class clientThread extends Thread{
                 }
             }
             // room is empty
-            targetRoom = openNewRoomNoDout();
-            String outputString = "joinRoom check " + generateTableStatusString(targetRoom) + "\r\n";
+            targetRoom = openNewRoomNoDout(targetRoomNumber);
+            String outputString;
+            if(targetRoom!=null)
+                outputString = "joinRoom check " + generateTableStatusString(targetRoom) + "\r\n";
+            else
+                outputString = "joinRoom fail\r\n";
             dout.write(outputString.getBytes("UTF-8"));
             return 0;
         } catch (Exception ex){
@@ -737,6 +786,7 @@ class clientThread extends Thread{
             return null;
         }
         if(me.theRoom.users.size() == 0){
+            availableRoomNumber[me.theRoom.roomNumber] = 0;
             roomArray.remove(me.theRoom);
         }
         Room lao = me.theRoom;

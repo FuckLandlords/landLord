@@ -1278,4 +1278,20 @@ class ClientThread extends Thread
         //your turn
     }
 
+    //i ignore cardInfo
+
+    //there is no need for gameOver_rec
+    public void gameOver_rec(String clientMessage)
+    {
+        int winnerIndex = -1;
+        //my stuff
+        int startElementIndex = clientMessage.indexOf(' ') + 1;
+        int endElementIndex = clientMessage.indexOf(' ', startElementIndex);
+        if(endElementIndex == -1)
+            endElementIndex = clientMessage.length();
+        winnerIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+        //your turn
+
+    }
+
 }
