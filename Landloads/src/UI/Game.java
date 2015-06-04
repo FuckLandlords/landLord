@@ -356,15 +356,19 @@ public class Game extends JPanel{
 			add(left_poker_out);
 			left_poker_out.setOpaque(false);
 		}
-		if(left_poker_remain_num == 0){
-			setWinner(LEFT_USER);
+		if(left_poker_remain_num != 0){
+			
+			remove(left_poker_remain);
+			left_poker_remain = new MyJpanel(image_poker_left[left_poker_remain_num-1]);
+			left_poker_remain.setOpaque(false);
+			add(left_poker_remain);
+			left_poker_remain_jlabel.setText(left_poker_remain_num+"");
+			left_poker_remain.add(left_poker_remain_jlabel);
 		}
-		remove(left_poker_remain);
-		left_poker_remain = new MyJpanel(image_poker_left[left_poker_remain_num-1]);
-		left_poker_remain.setOpaque(false);
-		add(left_poker_remain);
-		left_poker_remain_jlabel.setText(left_poker_remain_num+"");
-		left_poker_remain.add(left_poker_remain_jlabel);
+		else{
+			left_poker_remain_num = 17;
+			left_poker_remain.setVisible(false);
+		}
 		repaint();
 	}
 	/*
@@ -393,13 +397,18 @@ public class Game extends JPanel{
 			add(right_poker_out);
 			right_poker_out.setOpaque(false);
 		}
-		
-		remove(right_poker_remain);
-		right_poker_remain = new MyJpanel(image_poker_right[right_poker_remain_num-1]);
-		right_poker_remain.setOpaque(false);
-		add(right_poker_remain);
-		right_poker_remain_jlabel.setText(right_poker_remain_num+"");
-		right_poker_remain.add(right_poker_remain_jlabel);
+		if(right_poker_remain_num != 0){
+			remove(right_poker_remain);
+			right_poker_remain = new MyJpanel(image_poker_right[right_poker_remain_num-1]);
+			right_poker_remain.setOpaque(false);
+			add(right_poker_remain);
+			right_poker_remain_jlabel.setText(right_poker_remain_num+"");
+			right_poker_remain.add(right_poker_remain_jlabel);
+		}
+		else{
+			right_poker_remain_num = 17;
+			right_poker_remain.setVisible(false);
+		}
 		repaint();
 	}
 	
