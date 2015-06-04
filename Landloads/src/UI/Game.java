@@ -631,7 +631,7 @@ public class Game extends JPanel{
 	public void setLandlord(int num) {
 		reverseCards();
 		changeHeadAll();
-		startTimer(num, 1);
+		//startTimer(num, 1);
 		if (num == 0) {
 			setUserLandlord();
 			outbuttonJpanel.setVisible(true);
@@ -1381,10 +1381,18 @@ public class Game extends JPanel{
 				//向服务器发送信息
 				clock.setVisible(false);
 				timer.stop();
-				if(type == 0 && num == 0)
+				
+				if(type == 0 && num == 0){
 					p.info.landLordCall_send(p.playerIndex, "no");
-				else if(type == 1 && num == 0)
+					callbuttonJpanel.setVisible(false);
+					notcallbuttonJpanel.setVisible(false);
+				}
+				else if(type == 1 && num == 0){
 					p.info.cardOut_send(0, null, null);
+					outbuttonJpanel.setVisible(false);
+					notoutbuttonJpanel.setVisible(false);
+					notoutgrayJpanel.setVisible(false);
+				}
 			}
 		}
 	}
