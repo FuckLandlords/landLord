@@ -1185,6 +1185,7 @@ class ClientThread extends Thread
         if(endElementIndex == -1)
             endElementIndex = clientMessage.length();
         landLordIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
+        passCounter = 2;
         //your turn
         god.landlord = god.getIndex(landLordIndex);
         god.game.setLandlord(god.getIndex(landLordIndex));
