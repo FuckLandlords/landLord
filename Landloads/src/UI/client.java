@@ -16,6 +16,7 @@ import java.net.Socket;
 
 import javax.swing.JApplet;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 
 import UI.BackgroundPanel;
 
@@ -1123,7 +1124,16 @@ class ClientThread extends Thread
             endElementIndex = clientMessage.length();
         userIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
         //your turn
+        
         god.game.startTimer(god.getIndex(userIndex), 0);
+        if(god.getIndex(userIndex) == 0)
+        	god.game.poker_out.setVisible(false);
+        else if (god.getIndex(userIndex) == 1) {
+			god.game.left_poker_out.setVisible(false);
+		}
+        else{
+        	god.game.right_poker_out.setVisible(false);
+        }
         if(userIndex == god.playerIndex)
         	god.game.userCallOrOut(0);
     }
@@ -1161,6 +1171,8 @@ class ClientThread extends Thread
         else{
         	god.game.notOutOrCallLandlord(1, god.getIndex(userIndex));
         }
+        if(god.game.timer != null && god.game.timer.isRunning())
+        	god.game.timer.stop();
     }
 
     //there is no need for landLordIs_send
@@ -1174,6 +1186,7 @@ class ClientThread extends Thread
             endElementIndex = clientMessage.length();
         landLordIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
         //your turn
+        god.landlord = god.getIndex(landLordIndex);
         god.game.setLandlord(god.getIndex(landLordIndex));
     }
 
@@ -1193,10 +1206,13 @@ class ClientThread extends Thread
             passCounter = 0;
         }
         //your turn
+        if(god.game.timer != null && god.game.timer.isRunning())
+        	god.game.timer.stop();
         god.game.startTimer(god.getIndex(userIndex), 1);
         if(god.getIndex(userIndex) == 0){
         	god.game.outbuttonJpanel.setVisible(true);
         	god.game.notoutbuttonJpanel.setVisible(true);
+        	god.game.poker_out.setVisible(false);
         }
         god.freePlay = freeToPlay;
     }
@@ -1313,6 +1329,16 @@ class ClientThread extends Thread
         }
         i++;
         //your turn
+        int index = god.getIndex(userIndex);
+        if(cardCounter == 0){
+        	if(index == 1)
+        		god.game.notOutOrCallLandlord(0, 1);
+        	else if (index == 2) {
+				god.game.notOutOrCallLandlord(0, 2);
+			}
+        	if(god.game.timer!=null && god.game.timer.isRunning())
+        		god.game.timer.stop();
+        }
         Card[] c = new Card[cardCounter];
         for(int j = 0; j < cardCounter; j++){
         	c[j] = new Card(cardListColor[j], cardListValue[j]);

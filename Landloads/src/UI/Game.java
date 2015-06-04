@@ -384,6 +384,7 @@ public class Game extends JPanel{
 			else{
 				right_poker_out_width = 20*(left_out.length-1)+61;
 				right_poker_out_height = 82;
+				right_poker_out_x += (7-left_out.length)*20;
 			}
 			right_poker_out = new Poker_Out(left_out);
 			add(right_poker_out);
@@ -1052,15 +1053,18 @@ public class Game extends JPanel{
 		if(num == 1)
 		{
 			clock_x = 270;
-			clock_y = 300;
+			clock_y = 230;
+			left_poker_out.setVisible(false);
 		}
 		else if(num == 2){
 			clock_x = 590;
-			clock_y = 300;
+			clock_y = 230;
+			right_poker_out.setVisible(false);
 		}
 		else {
 			clock_x = 460;
 			clock_y = 230;
+			poker_out.setVisible(false);
 		}
 		if(type == 0)
 			count = 20;
@@ -1524,12 +1528,14 @@ public class Game extends JPanel{
 				callbuttonJpanel.setVisible(false);
 				notcallbuttonJpanel.setVisible(false);
 				//notOutOrCallLandlord(1, 0);
+				timer.stop();
 				p.info.landLordCall_send(p.playerIndex, "no");
 			}
 			else if(type == 1){
 				callbuttonJpanel.setVisible(false);
 				notcallbuttonJpanel.setVisible(false);
 				//notOutOrCallLandlord(2, 0);
+				timer.stop();
 				p.info.landLordCall_send(p.playerIndex, "yes");
 			}
 			else if(type == 2){
@@ -1537,6 +1543,7 @@ public class Game extends JPanel{
 				notoutbuttonJpanel.setVisible(false);
 				p.info.cardOut_send(0, null, null);
 				notOutOrCallLandlord(0, 0);
+				timer.stop();
 			}
 			else {
 				//出牌
@@ -1560,6 +1567,7 @@ public class Game extends JPanel{
 				if (!card.playCard) {
 					return;
 				}
+				timer.stop();
 				outbuttonJpanel.setVisible(false);
 				notoutbuttonJpanel.setVisible(false);
 				for(int j = 0; j < 20; j++){
