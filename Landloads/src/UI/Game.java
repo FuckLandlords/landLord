@@ -412,6 +412,9 @@ public class Game extends JPanel{
 		p.hasRight = true;
 		//init();
 		//repaint();
+		poker_remain_num = 17;
+		left_poker_remain_num = 17;
+		right_poker_remain_num = 17;
 		ready[3].setVisible(true);
 		poker_out.setVisible(false);
 		

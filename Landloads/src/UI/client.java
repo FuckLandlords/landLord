@@ -1364,11 +1364,13 @@ class ClientThread extends Thread
         }
         else if (god.getIndex(userIndex) == 1) {
     		god.game.left_poker_remain_num -= c.length;
-			god.game.getLeftPoker(c);
+    		if(god.game.left_poker_remain_num != 0)
+    			god.game.getLeftPoker(c);
 		}
         else{
         	god.game.right_poker_remain_num -= c.length;
-        	god.game.getRightPoker(c);
+        	if(god.game.right_poker_remain_num != 0)
+        		god.game.getRightPoker(c);
         }
     }
 
