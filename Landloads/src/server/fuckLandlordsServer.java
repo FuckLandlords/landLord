@@ -363,8 +363,10 @@ class Game{
         cardOutReply(cardList, cardCounter);
         //cardInfo();
 
-        if(playersCards.size() == 0)
+        if(playersCards.size() == 0){
             gameOver(whosTurn);
+            return;
+        }
 
         whosTurn++;
         whosTurn%=3;
@@ -424,8 +426,10 @@ class Game{
             }
         }
 
-        if(playersCards.size() == 0)
+        if(playersCards.size() == 0){
             gameOver(whosTurn);
+            return;
+        }
 
         whosTurn++;
         whosTurn%=3;
