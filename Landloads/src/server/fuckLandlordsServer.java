@@ -1,5 +1,5 @@
 /**
- * Created by äÈÒã on 5/22/2015.
+ * Created by ï¿½ï¿½ï¿½ï¿½ on 5/22/2015.
  */
 package server;
 import javax.lang.model.type.ArrayType;
@@ -293,7 +293,7 @@ class Game{
                 public void run() {
                     XTimeOut();
                     toBeLoggedOut.add(players.get(whosTurn));
-                    if (theGame.bigPlayer == theGame.players.get(theGame.whosTurn).me) {
+                    if (bigPlayer == players.get(whosTurn).me) {
                         cardOut_machinePlay(cardDecks.get(whosTurn).cards.get(0).value + "", players.get(whosTurn).me.userName);
                     } else {
                         cardOut_machinePlay(-1 + "", players.get(whosTurn).me.userName);
