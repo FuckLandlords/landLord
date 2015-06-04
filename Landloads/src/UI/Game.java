@@ -1437,6 +1437,31 @@ public class Game extends JPanel{
 					notcallbuttonJpanel.setVisible(false);
 				}
 				else if(type == 1 && num == 0){
+					if(p.freePlay){
+						int k = 0;
+						if(p.playerIndex == 0){
+							for(int j = 0; j < 20; j++){
+								if(myCardJPanels[j].out == false)
+									k = j;
+							}
+
+						}
+						else {
+							for(int j = 0; j < 17; j++){
+								if(myCardJPanels[j].out == false)
+									k = j;
+							}
+
+						}
+						Card[] c = new Card[1];
+						c[0] = new Card(myCardJPanels[k].card.color, myCardJPanels[k].card.num);
+						int[] color = new int[1];
+						int[] num = new int[1];
+						color[0] = c[0].color;
+						num[0] = c[0].num;
+						p.info.cardOut_send(1, num, color);
+						return;
+					}
 					p.info.cardOut_send(0, null, null);
 					outbuttonJpanel.setVisible(false);
 					notoutbuttonJpanel.setVisible(false);
