@@ -609,17 +609,36 @@ public class Game extends JPanel{
 	 */
 	public void setPokerLocation() {
 		int k = 0;
-		for(int j = 0; j < 20; j++){
-			if(myCardJPanels[j].out)
-			{
-				myCardJPanels[j].setVisible(false);
-				continue;
+		if(p.landlord == 0){
+			for(int j = 0; j < 20; j++){
+				if(myCardJPanels[j].out)
+				{
+					myCardJPanels[j].setVisible(false);
+					continue;
+				}
+					
+				myCardJPanels[j].localX = 480 - (30*poker_remain_num+52)/2 + 30 *k;
+				myCardJPanels[j].localY = 500;
+				myCardJPanels[j].setVisible(true);
+				k++;
 			}
-				
-			myCardJPanels[j].localX = 480 - (30*poker_remain_num+52)/2 + 30 *k;
-			myCardJPanels[j].localY = 500;
-			myCardJPanels[j].setVisible(true);
-			k++;
+		}
+		else{
+			for(int j = 0; j < 17; j++){
+				if(myCardJPanels[j].out)
+				{
+					myCardJPanels[j].setVisible(false);
+					continue;
+				}
+					
+				myCardJPanels[j].localX = 480 - (30*poker_remain_num+52)/2 + 30 *k;
+				myCardJPanels[j].localY = 500;
+				myCardJPanels[j].setVisible(true);
+				k++;
+			}
+			for(int j = 17; j < 20; j++){
+				myCardJPanels[j].setVisible(false);
+			}
 		}
 	}
 	/*
