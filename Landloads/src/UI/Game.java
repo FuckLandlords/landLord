@@ -341,7 +341,7 @@ public class Game extends JPanel{
 			timer.stop();
 		
 		if(left_out!=null){
-			left_poker_remain_num -= left_out.length;
+			//left_poker_remain_num -= left_out.length;
 			left_poker_out_x = 278;
 			left_poker_out_y = 300;
 			if(left_out.length > 7){
@@ -377,7 +377,7 @@ public class Game extends JPanel{
 		
 
 		if(left_out!=null){
-			right_poker_remain_num -= left_out.length;
+			//right_poker_remain_num -= left_out.length;
 			right_poker_out_x = 500;
 			right_poker_out_y = 300;
 			if(left_out.length > 7){
@@ -1046,6 +1046,7 @@ public class Game extends JPanel{
 	
 	public void getUserPoker(Card[] c) {
 		poker_out = new User_Poker_Out(c);
+		
 		add(poker_out);
 		poker_out_x = 480-(c.length/2)*30;
 		poker_out_y = 400;
@@ -1138,6 +1139,7 @@ public class Game extends JPanel{
 		image_notcallbutton = getToolkit().getImage(str_notcallbutton);
 		image_outbutton = getToolkit().getImage(str_outbutton);
 		image_notoutbutton = getToolkit().getImage(str_notoutbutton);
+		image_notoutgray = getToolkit().getImage(str_notoutgray);
 		
 		image_head = new Image[24];
 		for(int j = 0; j < 24; j++){
@@ -1195,7 +1197,7 @@ public class Game extends JPanel{
 		mt.addImage(image_notcallbutton, 0);
 		mt.addImage(image_outbutton, 0);
 		mt.addImage(image_notoutbutton, 0);
-		
+		mt.addImage(image_notoutgray, 0);
 		
 		try {
 			mt.waitForAll();
@@ -1606,7 +1608,7 @@ public class Game extends JPanel{
 						myCardJPanels[j].selected = false;
 					}
 				}
-				poker_remain_num -= c.length;
+				//poker_remain_num -= c.length;
 				int[] valueList = new int[c.length];
 				int[] colorList = new int[c.length];
 				for(int j = 0; j < c.length; j++){

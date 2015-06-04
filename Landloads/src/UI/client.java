@@ -1357,14 +1357,17 @@ class ClientThread extends Thread
         }
         if(god.getIndex(userIndex) == 0)
         {
+        	god.game.poker_remain_num -= c.length;
         	god.game.getUserPoker(c);
 			god.game.setPokerLocation();
         }
         else if (god.getIndex(userIndex) == 1) {
 			god.game.getLeftPoker(c);
+			god.game.left_poker_remain_num -= c.length;
 		}
         else{
         	god.game.getRightPoker(c);
+        	god.game.right_poker_remain_num -= c.length;
         }
     }
 
