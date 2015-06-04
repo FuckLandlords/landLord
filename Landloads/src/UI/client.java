@@ -92,6 +92,8 @@ public class client extends JApplet{
 	
 	boolean isFirstEnterDesk = true;
 
+	boolean freePlay = true;
+	
 	public client() {
 		// TODO Auto-generated constructor
 		screenWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().width;
@@ -1172,6 +1174,7 @@ class ClientThread extends Thread
             endElementIndex = clientMessage.length();
         landLordIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
         //your turn
+        god.game.setLandlord(god.getIndex(landLordIndex));
     }
 
     //there is no need for XTurn_send
@@ -1190,6 +1193,12 @@ class ClientThread extends Thread
             passCounter = 0;
         }
         //your turn
+        god.game.startTimer(god.getIndex(userIndex), 1);
+        if(god.getIndex(userIndex) == 0){
+        	god.game.outbuttonJpanel.setVisible(true);
+        	god.game.notoutbuttonJpanel.setVisible(true);
+        }
+        god.freePlay = freeToPlay;
     }
 
     //there is no need for XTime_send
@@ -1304,6 +1313,18 @@ class ClientThread extends Thread
         }
         i++;
         //your turn
+        Card[] c = new Card[cardCounter];
+        for(int j = 0; j < cardCounter; j++){
+        	c[j] = new Card(cardListColor[j], cardListValue[j]);
+        }
+        if(god.getIndex(userIndex) == 0)
+        	return;
+        else if (god.getIndex(userIndex) == 1) {
+			god.game.getLeftPoker(c);
+		}
+        else{
+        	god.game.getRightPoker(c);
+        }
     }
 
     //i ignore cardInfo
@@ -1319,7 +1340,7 @@ class ClientThread extends Thread
             endElementIndex = clientMessage.length();
         winnerIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
         //your turn
-
+        god.game.restart();
     }
 
 }

@@ -1535,13 +1535,22 @@ public class Game extends JPanel{
 			else if(type == 2){
 				outbuttonJpanel.setVisible(false);
 				notoutbuttonJpanel.setVisible(false);
+				p.info.cardOut_send(0, null, null);
 				notOutOrCallLandlord(0, 0);
 			}
 			else {
 				//出牌
 				Card[] c = getSelectedCards();
+				playCards card;
 				//判断是否可出牌
-				playCards card = new playCards(c, c.length, lastCards, lastCards.length);
+				
+				if(p.freePlay){
+					lastCards = null;
+					card = new playCards(c, c.length, lastCards, 0);
+				}
+				else{
+					card = new playCards(c, c.length, lastCards, lastCards.length);
+				}
 				card.judgeType();
 				if (!card.legalCard) {
 					return;
@@ -1560,6 +1569,13 @@ public class Game extends JPanel{
 					}
 				}
 				poker_remain_num -= c.length;
+				int[] valueList = new int[c.length];
+				int[] colorList = new int[c.length];
+				for(int j = 0; j < c.length; j++){
+					valueList[j] = c[j].num;
+					colorList[j] = c[j].color;
+				}
+				p.info.cardOut_send(c.length, valueList, colorList);
 				getUserPoker(c);
 				setPokerLocation();
 			}
