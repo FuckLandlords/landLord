@@ -1213,8 +1213,13 @@ class ClientThread extends Thread
         	god.game.outbuttonJpanel.setVisible(true);
         	god.game.notoutbuttonJpanel.setVisible(true);
         	god.game.poker_out.setVisible(false);
+        	if(freeToPlay){
+        		god.game.notoutgrayJpanel.setVisible(true);
+        		god.game.notoutbuttonJpanel.setVisible(false);
+        	}
         }
         god.freePlay = freeToPlay;
+        
     }
 
     //there is no need for XTime_send
@@ -1350,7 +1355,10 @@ class ClientThread extends Thread
         	god.game.lastCards[j] = new Card(cardListColor[j], cardListValue[j]);
         }
         if(god.getIndex(userIndex) == 0)
-        	return;
+        {
+        	god.game.getUserPoker(c);
+			god.game.setPokerLocation();
+        }
         else if (god.getIndex(userIndex) == 1) {
 			god.game.getLeftPoker(c);
 		}

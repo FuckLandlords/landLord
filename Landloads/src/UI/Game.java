@@ -54,6 +54,7 @@ public class Game extends JPanel{
 	String str_notcallbutton = "res/mainView/notcallbutton.png";
 	String str_outbutton = "res/mainView/outbutton.png";
 	String str_notoutbutton = "res/mainView/notoutbutton.png";
+	String str_notoutgray = "res/mainView/notoutgray.png";
 	//烟雾效果
 	String str_smoke = "res/poker/smoke";
 	Image[] image_smoke;
@@ -86,6 +87,7 @@ public class Game extends JPanel{
 	Image image_notcallbutton;
 	Image image_outbutton;
 	Image image_notoutbutton;
+	Image image_notoutgray;
 	
 	int menuflag;
 	MediaTracker mt;
@@ -131,6 +133,7 @@ public class Game extends JPanel{
 	
 	MyJpanel outbuttonJpanel;
 	MyJpanel notoutbuttonJpanel;
+	MyJpanel notoutgrayJpanel;
 	//左边玩家出的牌和剩下的牌数
 	int left_poker_remain_num = 17;
 	MyJpanel left_poker_remain;
@@ -418,6 +421,7 @@ public class Game extends JPanel{
 		clock.setVisible(false);
 		
 		outbuttonJpanel.setVisible(false);
+		notoutgrayJpanel.setVisible(false);
 		notoutbuttonJpanel.setVisible(false);
 		
 		three_cards_jpanel.setVisible(false);
@@ -828,6 +832,11 @@ public class Game extends JPanel{
 		add(outbuttonJpanel);
 		
 		notoutbuttonJpanel = new MyJpanel(image_notoutbutton);
+		notoutgrayJpanel = new MyJpanel(image_notoutgray);
+		
+		notoutgrayJpanel.setVisible(false);
+		add(notoutgrayJpanel);
+		
 		notoutbuttonJpanel.setVisible(false);
 		notoutbuttonJpanel.setOpaque(false);
 		notoutbuttonJpanel.addMouseListener(new Click_OutOrCall(2));
@@ -981,6 +990,9 @@ public class Game extends JPanel{
 		
 		notoutbuttonJpanel.setLocation(400, 400);
 		notoutbuttonJpanel.setSize(80, 40);
+		
+		notoutgrayJpanel.setLocation(400, 400);
+		notoutgrayJpanel.setSize(80, 40);
 	}
 	
 	/*
@@ -1579,6 +1591,7 @@ public class Game extends JPanel{
 				timer.stop();
 				outbuttonJpanel.setVisible(false);
 				notoutbuttonJpanel.setVisible(false);
+				notoutgrayJpanel.setVisible(false);
 				for(int j = 0; j < 20; j++){
 					if (myCardJPanels[j].selected) {
 						myCardJPanels[j].out = true;
@@ -1593,8 +1606,6 @@ public class Game extends JPanel{
 					colorList[j] = c[j].color;
 				}
 				p.info.cardOut_send(c.length, valueList, colorList);
-				getUserPoker(c);
-				setPokerLocation();
 			}
 		}
 		public void mousePressed(MouseEvent e) {}
