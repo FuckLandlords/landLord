@@ -1362,12 +1362,12 @@ class ClientThread extends Thread
 			god.game.setPokerLocation();
         }
         else if (god.getIndex(userIndex) == 1) {
+    		god.game.left_poker_remain_num -= c.length;
 			god.game.getLeftPoker(c);
-			god.game.left_poker_remain_num -= c.length;
 		}
         else{
-        	god.game.getRightPoker(c);
         	god.game.right_poker_remain_num -= c.length;
+        	god.game.getRightPoker(c);
         }
     }
 
