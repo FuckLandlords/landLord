@@ -489,7 +489,7 @@ class Game{
             h.logout("logout " + h.me.userName + " 123\r\n");
         }
 
-        String gameOverString = "gameOver" + whosTurn + "\r\n";
+        String gameOverString = "gameOver " + whosTurn + "\r\n";
         int playersSize = players.size();
         for(int i = 0; i<playersSize;i++){
             clientThread h = players.get(i);
