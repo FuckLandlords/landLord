@@ -579,7 +579,7 @@ class clientThread extends Thread{
             System.out.println(clientCommand);
             if(clientCommand.startsWith("logout")){
                 logout(clientCommand);
-                break;
+                login();
             } else if(clientCommand.startsWith("startMatching")){
                 startMatching();
             } else if(clientCommand.startsWith("tableStatus")){
