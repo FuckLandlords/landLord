@@ -379,6 +379,11 @@ class Game{
             return;
         //verify card list
 
+        timer.cancel();
+        timer = new Timer();
+        timer2.cancel();
+        timer2 = new Timer();
+
         Card card = new Card();
         int cardEndIndex = -1, cardStartIndex = 0, cardIndex, cardCounter = 0;
         ArrayList<Card> playersCards = cardDecks.get(whosTurn).cards;

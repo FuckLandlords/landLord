@@ -1311,21 +1311,21 @@ class ClientThread extends Thread
         }
         int card = Integer.parseInt(clientMessage.substring(startElementIndex, clientMessage.length()));
         if(card == -1){
-            cardCounter = -1;//so it will be added to zero
+            cardCounter = 0;
             passCounter ++;
-        } else{
-            passCounter = passCounter>0?passCounter-1:0;
-        }
-        if(card == 57){
+        } else if(card == 57){
             cardListColor[i] = 5;
             cardListValue[i] = 1;
+            passCounter = passCounter>0?passCounter-1:0;
         } else if(card == 58){
             cardListColor[i] = 5;
             cardListValue[i] = 2;
-        }else{
+            passCounter = passCounter>0?passCounter-1:0;
+        } else{
             card--;
             cardListColor[i] = (card%4) + 1;
             cardListValue[i] = card/4;
+            passCounter = passCounter>0?passCounter-1:0;
         }
         i++;
         //your turn
@@ -1338,6 +1338,7 @@ class ClientThread extends Thread
 			}
         	if(god.game.timer!=null && god.game.timer.isRunning())
         		god.game.timer.stop();
+        	return;
         }
         Card[] c = new Card[cardCounter];
         for(int j = 0; j < cardCounter; j++){
