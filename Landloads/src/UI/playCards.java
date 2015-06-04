@@ -587,7 +587,7 @@ public class playCards
 			playCard = false;
 			return;
 		}
-		if (lastType == 0) {
+		if (lastType == 0 && type != 0) {
 			playCard = true;
 			return;
 		}

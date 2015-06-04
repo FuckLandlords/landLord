@@ -1336,13 +1336,18 @@ class ClientThread extends Thread
         	else if (index == 2) {
 				god.game.notOutOrCallLandlord(0, 2);
 			}
+        	else {
+				god.game.notOutOrCallLandlord(0, 0);
+			}
         	if(god.game.timer!=null && god.game.timer.isRunning())
         		god.game.timer.stop();
         	return;
         }
         Card[] c = new Card[cardCounter];
+        god.game.lastCards = new Card[cardCounter];
         for(int j = 0; j < cardCounter; j++){
         	c[j] = new Card(cardListColor[j], cardListValue[j]);
+        	god.game.lastCards[j] = new Card(cardListColor[j], cardListValue[j]);
         }
         if(god.getIndex(userIndex) == 0)
         	return;

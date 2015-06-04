@@ -1074,7 +1074,7 @@ public class Game extends JPanel{
 		clock.setVisible(true);
 		currentJLabel.setText(count + "");
 		count--;
-		timer = new Timer(1000, new StartTimerListener());
+		timer = new Timer(1000, new StartTimerListener(type, num));
 		timer.start();
 
 		
@@ -1356,6 +1356,11 @@ public class Game extends JPanel{
 	}
 	
 	public class StartTimerListener implements ActionListener{
+		int type;
+		int num;
+		public StartTimerListener(int type, int num){
+			this.type = type;
+		}
 		public void actionPerformed(ActionEvent e){
 			currentJLabel.setText(count + "");
 			count --;
@@ -1364,6 +1369,10 @@ public class Game extends JPanel{
 				//向服务器发送信息
 				clock.setVisible(false);
 				timer.stop();
+				if(type == 0 && num == 0)
+					p.info.landLordCall_send(p.playerIndex, "no");
+				else if(type == 1 && num == 0)
+					p.info.cardOut_send(0, null, null);
 			}
 		}
 	}
