@@ -441,6 +441,16 @@ public class Game extends JPanel{
 		for(int j = 0;j < 20; j++){
 			myCardJPanels[j].setVisible(false);
 		}
+		for(int j = 17; j < 20; j++){
+			myCardJPanels[j].setVisible(false);
+		}
+		for(int j = 17; j<20;j++){
+			myCardJPanels[j] = new CardJPanel(myCard[j], image_poker_back);
+			myCardJPanels[j].localX = 730 + (j-17) * 70;
+			myCardJPanels[j].localY = 10;
+			add(myCardJPanels[j]);
+			myCardJPanels[j].setVisible(false);
+		}
 		left_poker_out.setVisible(false);
 		
 		left_poker_remain.setVisible(false);

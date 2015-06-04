@@ -417,9 +417,12 @@ class ClientThread extends Thread
                     XTime_rec(choice);
                 } else if(choice.startsWith("cardOut")){
                     cardOut_rec(choice);
-                } else {
-
+                } else if(choice.startsWith("gameOver")){
+                	gameOver_rec(choice);
                 }
+                else {
+					
+				}
             }
         }catch (Exception ex){
             System.out.println("LoLo");
@@ -1388,7 +1391,9 @@ class ClientThread extends Thread
             endElementIndex = clientMessage.length();
         winnerIndex = Integer.parseInt(clientMessage.substring(startElementIndex, endElementIndex));
         //your turn
+        System.out.println("restart");
         god.game.restart();
+        System.out.println("restart");
     }
 
 }
