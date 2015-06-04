@@ -293,7 +293,7 @@ class Game{
                 public void run() {
                     XTimeOut();
                     toBeLoggedOut.add(players.get(whosTurn));
-                    if (biggestCards.size() == 0) {
+                    if (theGame.bigPlayer == theGame.players.get(theGame.whosTurn).me) {
                         cardOut_machinePlay(cardDecks.get(whosTurn).cards.get(0).value + "", players.get(whosTurn).me.userName);
                     } else {
                         cardOut_machinePlay(-1 + "", players.get(whosTurn).me.userName);
