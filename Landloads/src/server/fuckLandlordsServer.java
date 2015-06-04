@@ -2,11 +2,8 @@
  * Created by ���� on 5/22/2015.
  */
 package server;
-import javax.lang.model.type.ArrayType;
-import java.lang.reflect.Array;
 import java.net.*;
 import java.io.*;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 class User{
@@ -304,7 +301,7 @@ class Game{
                         timer2.cancel();
                     }
                 }
-            }, 25000);
+            }, 250000);
             //timer.schedule(new timerTask1(this), 25000);
             timer2.schedule(new TimerTask() {
                 @Override

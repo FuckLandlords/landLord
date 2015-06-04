@@ -438,7 +438,7 @@ public class Game extends JPanel{
 		right_poker_remain.setVisible(false);
 		
 		getSmoke(6);
-		
+		repaint();
 		
 	}
 	
@@ -1046,14 +1046,20 @@ public class Game extends JPanel{
 	 * 获取选中的牌
 	 */
 	public Card[] getSelectedCards(){
+		int num = 0;
+		if(p.landlord == 0)
+			num = 20;
+		else {
+			num = 17;
+		}
 		int k = 0;
-		for(int j = 0; j < poker_remain_num;j ++){
+		for(int j = 0; j < num;j ++){
 			if(myCardJPanels[j].selected)
 				k++;
 		}
 		Card[] c = new Card[k];
 		k = 0;
-		for(int j = 0; j < poker_remain_num;j ++){
+		for(int j = 0; j < num;j ++){
 			if(myCardJPanels[j].selected)
 			{
 				c[k] = new Card(myCardJPanels[j].card.color, myCardJPanels[j].card.num);
@@ -1571,10 +1577,11 @@ public class Game extends JPanel{
 		}
 
 		public void mouseClicked(MouseEvent e) {
-			if(timer.isRunning())
-				clock.setVisible(false);
 			if(type == 0){
 				//不叫地主
+				if(timer.isRunning())
+					clock.setVisible(false);
+
 				callbuttonJpanel.setVisible(false);
 				notcallbuttonJpanel.setVisible(false);
 				//notOutOrCallLandlord(1, 0);
@@ -1582,6 +1589,9 @@ public class Game extends JPanel{
 				p.info.landLordCall_send(p.playerIndex, "no");
 			}
 			else if(type == 1){
+				if(timer.isRunning())
+					clock.setVisible(false);
+
 				callbuttonJpanel.setVisible(false);
 				notcallbuttonJpanel.setVisible(false);
 				//notOutOrCallLandlord(2, 0);
@@ -1589,6 +1599,9 @@ public class Game extends JPanel{
 				p.info.landLordCall_send(p.playerIndex, "yes");
 			}
 			else if(type == 2){
+				if(timer.isRunning())
+					clock.setVisible(false);
+
 				outbuttonJpanel.setVisible(false);
 				notoutbuttonJpanel.setVisible(false);
 				p.info.cardOut_send(0, null, null);
@@ -1597,6 +1610,7 @@ public class Game extends JPanel{
 			}
 			else {
 				//出牌
+				System.out.println(poker_remain_num);
 				Card[] c = getSelectedCards();
 				playCards card;
 				//判断是否可出牌
@@ -1617,7 +1631,10 @@ public class Game extends JPanel{
 				if (!card.playCard) {
 					return;
 				}
-				timer.stop();
+				if(timer.isRunning()){
+					clock.setVisible(false);
+					timer.stop();
+				}
 				outbuttonJpanel.setVisible(false);
 				notoutbuttonJpanel.setVisible(false);
 				notoutgrayJpanel.setVisible(false);

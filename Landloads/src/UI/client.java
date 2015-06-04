@@ -351,7 +351,7 @@ class ClientThread extends Thread
 	{
 		try
 		{
-			String ip = "192.168.1.111";
+			String ip = "192.168.191.3";
 			ClientSoc=new Socket(ip,2015);
 			din=new DataInputStream(ClientSoc.getInputStream());
 			dout=new DataOutputStream(ClientSoc.getOutputStream());
@@ -1358,6 +1358,7 @@ class ClientThread extends Thread
         if(god.getIndex(userIndex) == 0)
         {
         	god.game.poker_remain_num -= c.length;
+        	System.out.println(god.game.poker_remain_num);
         	god.game.getUserPoker(c);
 			god.game.setPokerLocation();
         }
