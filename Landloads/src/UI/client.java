@@ -873,19 +873,22 @@ class ClientThread extends Thread
         			god.hasRight = true;
         			god.player2 = playerList[1];
         			god.game.rightJoin();
+        			god.playerIndex = 0;
         		}
         		else{
         			if(god.hasleft == false){
         				god.hasleft = true;
         				god.player1 = playerList[2];
         				god.game.leftJoin();
+        				god.playerIndex = 0;
         			}
         			else {
 						god.hasRight = true;
 						god.player2 = playerList[2];
 						god.game.rightJoin();
+						god.playerIndex = 1;
 					}
-        		}
+              	}
         	}
 
         }
@@ -941,6 +944,7 @@ class ClientThread extends Thread
         	god.game.ready[2].setVisible(false);
         	god.player1 = "";
         	god.player2 = "";
+        	god.playerCounter = -1;
         	tablesStatus_send();
         	
         }
