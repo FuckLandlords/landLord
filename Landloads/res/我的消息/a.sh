@@ -1,1 +1,0 @@
-for i in `ls *.png`;do xcrun -sdk iphoneos pngcrush -revert-iphone-optimizations $i /tmp/$i; mv /tmp/$i $i; done

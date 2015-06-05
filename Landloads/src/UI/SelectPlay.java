@@ -1,8 +1,10 @@
 package UI;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.MediaTracker;
@@ -66,7 +68,7 @@ public class SelectPlay extends JPanel {
 	
 	public SelectPlay(client p){
 		this.p = p;
-		headNum = 10;
+		headNum = 5;
 		str_head  = str_head + headNum + ".png";
 		loadMedia();
 		setLayout(null);
@@ -188,6 +190,22 @@ public class SelectPlay extends JPanel {
 		
 	}
 	
+	public void initInfo() {
+		bottomBar.remove(userMessage);
+		userMessage = new JPanel(){
+			protected void paintComponent(Graphics g) {
+				Dimension d = getSize();
+				g.drawImage(image_headmessage, 0, 0, d.width, d.height, null);
+				g.drawImage(image_beans, 20, 60, 44, 42, null);
+				g.setColor(Color.WHITE);
+				g.setFont(new Font("微软雅黑", Font.BOLD, 20));
+				g.drawString(p.player, 20, 40);
+				}
+		};
+		userMessage.setOpaque(false);
+		bottomBar.add(userMessage);
+		
+	}
 	protected void paintComponent(Graphics g){
 		returnJPanel.setLocation(20, 10);
 		returnJPanel.setSize(106, 82);

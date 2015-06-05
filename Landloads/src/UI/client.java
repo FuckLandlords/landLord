@@ -60,7 +60,7 @@ public class client extends JApplet{
 	PrintWriter os;
 	BufferedReader is;
 //需要跟服务器一致
-	String serverIP = "192.168.1.113";
+	String serverIP = "127.0.0.1";
 	int serverPort = 4700;
 	
 	//游戏信息
@@ -220,6 +220,7 @@ public class client extends JApplet{
 	
 	public void showSelectPlay() {
 		log.setVisible(false);
+		selectPlay.initInfo();
 		selectPlay.setVisible(true);
 		myData.setVisible(false);
 		bgp.setVisible(true);
@@ -351,7 +352,7 @@ class ClientThread extends Thread
 	{
 		try
 		{
-			String ip = "192.168.191.3";
+			String ip = "127.0.0.1";
 			ClientSoc=new Socket(ip,2015);
 			din=new DataInputStream(ClientSoc.getInputStream());
 			dout=new DataOutputStream(ClientSoc.getOutputStream());
